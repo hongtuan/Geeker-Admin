@@ -48,6 +48,8 @@ Geeker-Admin 一款基于 Vue3.3、TypeScript、Vite4、Pinia、Element-Plus 开
 git clone https://gitee.com/HalseySpicy/Geeker-Admin.git
 # GitHub
 git clone https://github.com/HalseySpicy/Geeker-Admin.git
+# install pnpm
+npm install -g pnpm
 ```
 
 - **Install：**
