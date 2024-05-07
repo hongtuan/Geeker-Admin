@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, ConfigEnv, UserConfig } from "vite";
 import { resolve } from "path";
 import { wrapperEnv } from "./build/getEnv";
-import { createProxy } from "./build/proxy";
+// import { createProxy } from "./build/proxy";
 import { createVitePlugins } from "./build/plugins";
 import pkg from "./package.json";
 import dayjs from "dayjs";
@@ -43,7 +43,16 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: viteEnv.VITE_OPEN,
       cors: true,
       // Load proxy configuration from .env.development
-      proxy: createProxy(viteEnv.VITE_PROXY)
+      // proxy: createProxy(viteEnv.VITE_PROXY),
+      proxy: {
+        "/api": {
+          // target: "https://mock.mengxuegu.com/mock/629d727e6163854a32e8307e", // easymock
+          target: "http://127.0.0.1:8080/", // cpp backend
+          // target: "https://www.fastmock.site/mock/f81e8333c1a9276214bcdbc170d9e0a0", // fastmock
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/api/, "")
+        }
+      }
     },
     plugins: createVitePlugins(viteEnv),
     esbuild: {
