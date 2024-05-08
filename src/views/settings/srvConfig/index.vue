@@ -13,18 +13,20 @@
               <span>服务器基本配置</span>
             </div>
           </template>
-          <div style="width: 100%; height: 190px; overflow: auto">
+          <div style="width: 100%; height: 210px; overflow: auto">
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
-              <el-col :span="5"><span>服务器时间：</span></el-col>
-              <el-col :span="12"><el-input type="input" v-model="sysTime"></el-input></el-col>
-              <el-col :span="7">
+              <el-col :span="5" style="text-align: right"><span>服务器时间：</span></el-col>
+              <el-col :span="8" style="min-height: 36px">
+                <el-input type="input" v-model="sysTime" style="width: 240px"></el-input>
+              </el-col>
+              <el-col :span="7" style="min-height: 36px">
                 <el-button @click="refreshTime">刷新</el-button>
                 <el-button @click="saveTime">保存</el-button>
               </el-col>
             </el-row>
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
-              <el-col :span="5"><span>以太网Mac地址：</span></el-col>
-              <el-col :span="12"><el-input type="input" v-model="ethMac"></el-input></el-col>
+              <el-col :span="5" style="text-align: right"><span>以太网Mac地址：</span></el-col>
+              <el-col :span="8"><el-input type="input" v-model="ethMac" style="width: 240px"></el-input></el-col>
               <el-col :span="7">
                 <el-button @click="refreshEthMac">刷新</el-button>
                 <el-button @click="saveEthMac">保存</el-button>
@@ -40,7 +42,7 @@
               <span>服务器以太网设置</span>
             </div>
           </template>
-          <div style="width: 100%; height: 190px; overflow: auto">
+          <div style="width: 100%; height: 210px; overflow: auto">
             <el-row type="flex" align="middle">
               <el-col :span="24">
                 <el-input type="textarea" v-model="ethConf" :rows="6"></el-input>
@@ -64,7 +66,7 @@
               <span>INS数据处理配置</span>
             </div>
           </template>
-          <div style="width: 100%; height: 276px; overflow: auto">
+          <div style="width: 100%; height: 296px; overflow: auto">
             <el-row type="flex" align="middle">
               <el-col :span="24">
                 <el-input type="textarea" v-model="insConf" :rows="10"></el-input>
@@ -86,7 +88,7 @@
               <span>CPT7数据处理配置</span>
             </div>
           </template>
-          <div style="width: 100%; height: 276px; overflow: auto">
+          <div style="width: 100%; height: 296px; overflow: auto">
             <el-row type="flex" align="middle">
               <el-col :span="24">
                 <el-input type="textarea" v-model="cpt7Conf" :rows="10"></el-input>

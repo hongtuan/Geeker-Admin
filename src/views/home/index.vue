@@ -3,12 +3,12 @@
     <template #header>
       <div class="card-header">
         <span>网关运行日志</span>
-        <el-button @click="loadData">刷新</el-button>
+        <el-button class="button" @click="loadData" text>刷新</el-button>
       </div>
     </template>
     <el-row>
       <el-col>
-        <el-input type="textarea" :value="logData" :rows="20" :readonly="true"></el-input>
+        <el-input type="textarea" :value="logData" :rows="34" :readonly="true"></el-input>
       </el-col>
     </el-row>
   </el-card>
@@ -31,5 +31,8 @@ onMounted(() => loadData());
 </script>
 
 <style scoped lang="scss">
-@import "./index.scss";
+.box-card {
+  width: 100%;
+  height: 100%;
+}
 </style>
