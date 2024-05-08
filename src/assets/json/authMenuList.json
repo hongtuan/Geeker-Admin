@@ -6,8 +6,8 @@
       "name": "home",
       "component": "/home/index",
       "meta": {
-        "icon": "HomeFilled",
-        "title": "首页",
+        "icon": "Tickets",
+        "title": "运行日志",
         "isLink": "",
         "isHide": false,
         "isFull": false,
@@ -17,12 +17,12 @@
     },
 
     {
-      "path": "/form",
-      "name": "form",
-      "redirect": "/form/proForm",
+      "path": "/settings",
+      "name": "settings",
+      "redirect": "/settings/srvConfig",
       "meta": {
-        "icon": "Tickets",
-        "title": "表单 Form",
+        "icon": "Setting",
+        "title": "系统配置",
         "isLink": "",
         "isHide": false,
         "isFull": false,
@@ -31,12 +31,12 @@
       },
       "children": [
         {
-          "path": "/form/proForm",
-          "name": "proForm",
-          "component": "/form/proForm/index",
+          "path": "/settings/srvConfig",
+          "name": "srvConfig",
+          "component": "/settings/srvConfig/index",
           "meta": {
             "icon": "Menu",
-            "title": "超级 Form",
+            "title": "服务配置",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -45,40 +45,12 @@
           }
         },
         {
-          "path": "/form/basicForm",
-          "name": "basicForm",
-          "component": "/form/basicForm/index",
+          "path": "/settings/srvUpdate",
+          "name": "srvUpdate",
+          "component": "/settings/srvUpdate/index",
           "meta": {
             "icon": "Menu",
-            "title": "基础 Form",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": true
-          }
-        },
-        {
-          "path": "/form/validateForm",
-          "name": "validateForm",
-          "component": "/form/validateForm/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "校验 Form",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": true
-          }
-        },
-        {
-          "path": "/form/dynamicForm",
-          "name": "dynamicForm",
-          "component": "/form/dynamicForm/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "动态 Form",
+            "title": "服务程序更新",
             "isLink": "",
             "isHide": false,
             "isFull": false,
