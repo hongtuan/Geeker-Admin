@@ -1,69 +1,203 @@
 <template>
-  <div class="card content-box">
-    <el-form :model="formData" label-width="140px">
-      <el-form-item label="Activity name :">
-        <el-input v-model="formData.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone :">
-        <el-select v-model="formData.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time :">
-        <el-date-picker v-model="formData.date1" type="date" placeholder="Pick a date" />
-        <el-col :span="1" class="text-center">
-          <span class="text-gray-500">-</span>
-        </el-col>
-        <el-time-picker v-model="formData.date2" placeholder="Pick a time" />
-      </el-form-item>
-      <el-form-item label="Instant delivery :">
-        <el-switch v-model="formData.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type :">
-        <el-checkbox-group v-model="formData.type">
-          <el-checkbox label="Online activities" name="type" />
-          <el-checkbox label="Promotion activities" name="type" />
-          <el-checkbox label="Offline activities" name="type" />
-          <el-checkbox label="Simple brand exposure" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources :">
-        <el-radio-group v-model="formData.resource">
-          <el-radio label="Sponsor" />
-          <el-radio label="Venue" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form :">
-        <el-input v-model="formData.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit"> Create </el-button>
-        <el-button>Cancel</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <el-card class="box-card">
+    <template #header>
+      <div class="card-header">
+        <span>服务配置</span>
+      </div>
+    </template>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>服务器基本配置</span>
+            </div>
+          </template>
+          <div style="width: 100%; height: 190px; overflow: auto">
+            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+              <el-col :span="5"><span>服务器时间：</span></el-col>
+              <el-col :span="12"><el-input type="input" v-model="sysTime"></el-input></el-col>
+              <el-col :span="7">
+                <el-button @click="refreshTime">刷新</el-button>
+                <el-button @click="saveTime">保存</el-button>
+              </el-col>
+            </el-row>
+            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+              <el-col :span="5"><span>以太网Mac地址：</span></el-col>
+              <el-col :span="12"><el-input type="input" v-model="ethMac"></el-input></el-col>
+              <el-col :span="7">
+                <el-button @click="refreshEthMac">刷新</el-button>
+                <el-button @click="saveEthMac">保存</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>服务器以太网设置</span>
+            </div>
+          </template>
+          <div style="width: 100%; height: 190px; overflow: auto">
+            <el-row type="flex" align="middle">
+              <el-col :span="24">
+                <el-input type="textarea" v-model="ethConf" :rows="6"></el-input>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="center" align="middle">
+              <el-col :span="24">
+                <el-button style="margin-right: 10px" @click="refreshEthConf">刷新</el-button>
+                <el-button @click="saveEthConf">保存</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>INS数据处理配置</span>
+            </div>
+          </template>
+          <div style="width: 100%; height: 276px; overflow: auto">
+            <el-row type="flex" align="middle">
+              <el-col :span="24">
+                <el-input type="textarea" v-model="insConf" :rows="10"></el-input>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="center" align="middle">
+              <el-col :span="24">
+                <el-button style="margin-right: 10px" @click="refreshInsConf">刷新</el-button>
+                <el-button @click="saveInsConf">保存</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>CPT7数据处理配置</span>
+            </div>
+          </template>
+          <div style="width: 100%; height: 276px; overflow: auto">
+            <el-row type="flex" align="middle">
+              <el-col :span="24">
+                <el-input type="textarea" v-model="cpt7Conf" :rows="10"></el-input>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="center" align="middle">
+              <el-col :span="24">
+                <el-button style="margin-right: 10px" @click="refreshCpt7Conf">刷新</el-button>
+                <el-button @click="saveCpt7Conf">保存</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </el-card>
 </template>
 
-<script setup lang="ts" name="basicForm">
-import { ElMessage } from "element-plus";
-import { reactive } from "vue";
+<script setup lang="ts" name="srvConfig">
+import { ref, onMounted } from "vue";
+import { getSysTime, setSysTime, getEthMac, setEthMac, getEthConf, setEthConf } from "@/api/modules/sysadmin";
+import { getINSConf, setINSConf, getCPT7Conf, setCPT7Conf } from "@/api/modules/sysadmin";
+// import { ElMessage } from 'element-plus';
+// import { getSysTime, setSysTime } from '@/api/settings/srvConfig';
+const sysTime = ref();
+const ethMac = ref();
+const ethConf = ref();
+const insConf = ref();
+const cpt7Conf = ref();
 
-// do not use same name with ref
-const formData = reactive({
-  name: "",
-  region: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: ""
-});
-
-const onSubmit = () => {
-  ElMessage.success("提交的数据为 : " + JSON.stringify(formData));
+const refreshTime = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getSysTime();
+  // console.log(JSON.stringify(data, null, 2));
+  sysTime.value = data.sysTime;
+  // console.log(sysTime.value);
 };
+const saveTime = async () => {
+  // 请求后端服务加载数据
+  let param = { sysTime: sysTime.value };
+  const { data } = await setSysTime(param);
+  console.log(JSON.stringify(data, null, 2));
+  sysTime.value = data.sysTime;
+  console.log(sysTime.value);
+};
+
+const refreshEthMac = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getEthMac();
+  ethMac.value = data.ethMac;
+  console.log(ethMac.value);
+  // refreshTime();
+};
+
+const saveEthMac = async () => {
+  // 请求后端服务加载数据
+  let param = { ethMac: ethMac.value };
+  const { data } = await setEthMac(param);
+  ethMac.value = data.ethMac;
+  console.log(ethMac.value);
+};
+
+const refreshEthConf = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getEthConf();
+  ethConf.value = data.ethConf;
+};
+
+const saveEthConf = async () => {
+  // 请求后端服务加载数据
+  let param = { ethConf: ethConf.value };
+  const { data } = await setEthConf(param);
+  ethConf.value = data.ethConf;
+};
+
+const refreshInsConf = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getINSConf();
+  insConf.value = data.insConf;
+};
+
+const saveInsConf = async () => {
+  // 请求后端服务加载数据
+  let param = { insConf: insConf.value };
+  const { data } = await setINSConf(param);
+  insConf.value = data.insConf;
+};
+
+const refreshCpt7Conf = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getCPT7Conf();
+  cpt7Conf.value = data.cpt7Conf;
+};
+
+const saveCpt7Conf = async () => {
+  // 请求后端服务加载数据
+  let param = { cpt7Conf: cpt7Conf.value };
+  const { data } = await setCPT7Conf(param);
+  cpt7Conf.value = data.cpt7Conf;
+};
+
+const loadData = async () => {
+  // 请求后端服务加载数据
+  refreshTime();
+  refreshEthMac();
+  refreshEthConf();
+  refreshInsConf();
+  refreshCpt7Conf();
+};
+// 页面加载完毕后调用这个方法
+onMounted(() => loadData());
 </script>
 
 <style scoped lang="scss">
