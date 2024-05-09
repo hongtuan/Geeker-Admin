@@ -28,6 +28,22 @@ export const getEthConf = () => {
 export const setEthConf = (params: any) => {
   return http.post<any>(PORT1 + `/setethconf`, params);
 };
+// 3.5
+export const loadEthConfDefault = () => {
+  return http.get<any>(PORT1 + `/loadethconfdefault`);
+};
+// 3.6
+export const getTJTestMode = () => {
+  return http.get<any>(PORT1 + `/gettjtestmode`);
+};
+// 3.7
+export const setTJTestMode = (params: any) => {
+  return http.post<any>(PORT1 + `/settjtestmode`, params);
+};
+// 3.8
+export const restartGwSrv = () => {
+  return http.get<any>(PORT1 + `/restartgwsrv`);
+};
 
 // 4.1
 export const getINSConf = () => {
@@ -37,6 +53,10 @@ export const getINSConf = () => {
 export const setINSConf = (params: any) => {
   return http.post<any>(PORT1 + `/setinsconf`, params);
 };
+// 4.3
+export const loadINSConfDefault = () => {
+  return http.get<any>(PORT1 + `/loadinsconfdefault`);
+};
 
 // 5.1
 export const getCPT7Conf = () => {
@@ -45,4 +65,8 @@ export const getCPT7Conf = () => {
 // 5.2
 export const setCPT7Conf = (params: any) => {
   return http.post<any>(PORT1 + `/setcpt7conf`, params);
+};
+// 5.3
+export const loadCPT7ConfDefault = () => {
+  return http.get<any>(PORT1 + `/loadcpt7confdefault`);
 };

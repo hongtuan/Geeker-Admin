@@ -19,7 +19,7 @@
               <el-col :span="8" style="min-height: 36px">
                 <el-input type="input" v-model="sysTime" style="width: 240px"></el-input>
               </el-col>
-              <el-col :span="7" style="min-height: 36px">
+              <el-col :span="9" style="min-height: 36px">
                 <el-button @click="refreshTime">刷新</el-button>
                 <el-button @click="saveTime">保存</el-button>
               </el-col>
@@ -27,9 +27,22 @@
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" style="text-align: right"><span>以太网Mac地址：</span></el-col>
               <el-col :span="8"><el-input type="input" v-model="ethMac" style="width: 240px"></el-input></el-col>
-              <el-col :span="7">
+              <el-col :span="9">
                 <el-button @click="refreshEthMac">刷新</el-button>
                 <el-button @click="saveEthMac">保存</el-button>
+              </el-col>
+            </el-row>
+            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+              <el-col :span="5" style="text-align: right"><span>天津工场测试模式：</span></el-col>
+              <el-col :span="8">
+                <el-checkbox v-model="tjTestMode">
+                  <span>{{ tjTestMode ? "打开" : "关闭" }}</span>
+                </el-checkbox>
+              </el-col>
+              <el-col :span="9">
+                <el-button @click="loadTJTestMode">刷新</el-button>
+                <el-button @click="saveTJTestMode">保存</el-button>
+                <el-button @click="restartGw">重启网关服务</el-button>
               </el-col>
             </el-row>
           </div>
@@ -51,6 +64,7 @@
             <el-row type="flex" justify="center" align="middle">
               <el-col :span="24">
                 <el-button style="margin-right: 10px" @click="refreshEthConf">刷新</el-button>
+                <el-button style="margin-right: 10px" @click="getEthConfDefault">加载默认配置</el-button>
                 <el-button @click="saveEthConf">保存</el-button>
               </el-col>
             </el-row>
@@ -75,6 +89,7 @@
             <el-row type="flex" justify="center" align="middle">
               <el-col :span="24">
                 <el-button style="margin-right: 10px" @click="refreshInsConf">刷新</el-button>
+                <el-button style="margin-right: 10px" @click="getInsConfDefault">加载默认配置</el-button>
                 <el-button @click="saveInsConf">保存</el-button>
               </el-col>
             </el-row>
@@ -97,6 +112,7 @@
             <el-row type="flex" justify="center" align="middle">
               <el-col :span="24">
                 <el-button style="margin-right: 10px" @click="refreshCpt7Conf">刷新</el-button>
+                <el-button style="margin-right: 10px" @click="getCpt7ConfDefault">加载默认配置</el-button>
                 <el-button @click="saveCpt7Conf">保存</el-button>
               </el-col>
             </el-row>
@@ -109,8 +125,18 @@
 
 <script setup lang="ts" name="srvConfig">
 import { ref, onMounted } from "vue";
-import { getSysTime, setSysTime, getEthMac, setEthMac, getEthConf, setEthConf } from "@/api/modules/sysadmin";
-import { getINSConf, setINSConf, getCPT7Conf, setCPT7Conf } from "@/api/modules/sysadmin";
+import { getSysTime, setSysTime, getEthMac, setEthMac, getEthConf, setEthConf, loadEthConfDefault } from "@/api/modules/sysadmin";
+import {
+  getINSConf,
+  setINSConf,
+  loadINSConfDefault,
+  getCPT7Conf,
+  setCPT7Conf,
+  loadCPT7ConfDefault,
+  getTJTestMode,
+  setTJTestMode,
+  restartGwSrv
+} from "@/api/modules/sysadmin";
 // import { ElMessage } from 'element-plus';
 // import { getSysTime, setSysTime } from '@/api/settings/srvConfig';
 const sysTime = ref();
@@ -118,6 +144,7 @@ const ethMac = ref();
 const ethConf = ref();
 const insConf = ref();
 const cpt7Conf = ref();
+const tjTestMode = ref();
 
 const refreshTime = async () => {
   // 请求后端服务加载数据
@@ -164,6 +191,12 @@ const saveEthConf = async () => {
   ethConf.value = data.ethConf;
 };
 
+const getEthConfDefault = async () => {
+  // 请求后端服务加载数据
+  const { data } = await loadEthConfDefault();
+  ethConf.value = data.ethConf;
+};
+
 const refreshInsConf = async () => {
   // 请求后端服务加载数据
   const { data } = await getINSConf();
@@ -174,6 +207,12 @@ const saveInsConf = async () => {
   // 请求后端服务加载数据
   let param = { insConf: insConf.value };
   const { data } = await setINSConf(param);
+  insConf.value = data.insConf;
+};
+
+const getInsConfDefault = async () => {
+  // 请求后端服务加载数据
+  const { data } = await loadINSConfDefault();
   insConf.value = data.insConf;
 };
 
@@ -190,6 +229,33 @@ const saveCpt7Conf = async () => {
   cpt7Conf.value = data.cpt7Conf;
 };
 
+const getCpt7ConfDefault = async () => {
+  // 请求后端服务加载数据
+  const { data } = await loadCPT7ConfDefault();
+  cpt7Conf.value = data.cpt7Conf;
+};
+
+const restartGw = async () => {
+  // 请求后端服务加载数据
+  const { data } = await restartGwSrv();
+  console.log(data);
+};
+
+const loadTJTestMode = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getTJTestMode();
+  console.log(JSON.stringify(data, null, 2));
+  tjTestMode.value = data.tjTestMode;
+  console.log(data);
+};
+
+const saveTJTestMode = async () => {
+  // 请求后端服务加载数据
+  let param = { tjTestMode: tjTestMode.value };
+  const { data } = await setTJTestMode(param);
+  console.log(data);
+};
+
 const loadData = async () => {
   // 请求后端服务加载数据
   refreshTime();
@@ -197,6 +263,7 @@ const loadData = async () => {
   refreshEthConf();
   refreshInsConf();
   refreshCpt7Conf();
+  loadTJTestMode();
 };
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
