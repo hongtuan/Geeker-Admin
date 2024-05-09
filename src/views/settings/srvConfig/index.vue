@@ -144,7 +144,7 @@ const ethMac = ref();
 const ethConf = ref();
 const insConf = ref();
 const cpt7Conf = ref();
-const tjTestMode = ref();
+const tjTestMode = ref(false);
 
 const refreshTime = async () => {
   // 请求后端服务加载数据

@@ -4,6 +4,7 @@
       <div class="card-header">
         <span>网关运行日志</span>
         <el-button class="button" @click="loadData" text>刷新</el-button>
+        <el-button @click="restartGw">重启网关服务</el-button>
       </div>
     </template>
     <el-row>
@@ -17,7 +18,7 @@
 <script setup lang="ts" name="home">
 import { ref, onMounted } from "vue";
 
-import { getLogContent } from "@/api/modules/sysadmin";
+import { getLogContent, restartGwSrv } from "@/api/modules/sysadmin";
 const logData = ref({});
 const loadData = async () => {
   // 请求后端服务加载数据
@@ -25,6 +26,11 @@ const loadData = async () => {
   console.log(JSON.stringify(data, null, 2));
   logData.value = data.logData;
   console.log(logData.value);
+};
+const restartGw = async () => {
+  // 请求后端服务加载数据
+  const { data } = await restartGwSrv();
+  console.log(data);
 };
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
