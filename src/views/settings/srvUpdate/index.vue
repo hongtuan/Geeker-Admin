@@ -15,12 +15,12 @@
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
           <el-col style="text-align: left" flex>
             <span class="margin-right-10">服务程序版本：</span>
-            <el-input type="input" v-model="appVerInfo" class="margin-right-10" style="width: 240px" readonly></el-input>
+            <el-input type="input" v-model="appVerInfo" class="margin-right-10" style="width: 265px" readonly></el-input>
             <el-button @click="refreshAppVerInfo">刷新</el-button>
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
-          <el-col style="text-align: left" flex>
+          <el-col :span="6" style="text-align: left" flex>
             <el-upload
               class="upload"
               ref="uploadRef"
@@ -37,18 +37,16 @@
               :auto-upload="false"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text"><em class="vip-text-blue">点击选择程序升级包文件</em></div>
+              <div class="el-upload__text"><em class="vip-text-blue">点击选择网关服务程序(gwapp)升级包文件</em></div>
             </el-upload>
           </el-col>
-        </el-row>
-        <el-row type="flex" justify="start" style="margin-bottom: 10px">
-          <el-col style="text-align: left" flex>
+          <el-col :span="12" style="text-align: left" flex>
             <el-button type="primary" @click="doUploadTask" :disabled="uploadDisabled">上传</el-button>
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
           <el-col style="text-align: left" flex>
-            <el-input type="textarea" :value="logData" :rows="4" :readonly="true"></el-input>
+            <el-input type="textarea" :value="logData" :rows="5" :readonly="true"></el-input>
           </el-col>
         </el-row>
       </div>
@@ -63,12 +61,12 @@
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
           <el-col style="text-align: left" flex>
             <span class="margin-right-10">管理程序版本：</span>
-            <el-input type="input" v-model="adminVerInfo" class="margin-right-10" style="width: 240px" readonly></el-input>
+            <el-input type="input" v-model="adminVerInfo" class="margin-right-10" style="width: 265px" readonly></el-input>
             <el-button @click="refreshAdminVerInfo">刷新</el-button>
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
-          <el-col style="text-align: left" flex>
+          <el-col :span="6" style="text-align: left" flex>
             <el-upload
               class="upload"
               ref="uploadRefAdmin"
@@ -85,18 +83,16 @@
               :auto-upload="false"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text"><em class="vip-text-blue">点击选择程序升级包文件</em></div>
+              <div class="el-upload__text"><em class="vip-text-blue">点击选择网关管理程序(gwadmin)升级包文件</em></div>
             </el-upload>
           </el-col>
-        </el-row>
-        <el-row type="flex" justify="start" style="margin-bottom: 10px">
-          <el-col style="text-align: left" flex>
+          <el-col :span="12" style="text-align: left" flex>
             <el-button type="primary" @click="doUploadTaskAdmin" :disabled="uploadDisabledAdmin">上传</el-button>
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
           <el-col style="text-align: left" flex>
-            <el-input type="textarea" :value="logDataAdmin" :rows="4" :readonly="true"></el-input>
+            <el-input type="textarea" :value="logDataAdmin" :rows="5" :readonly="true"></el-input>
           </el-col>
         </el-row>
       </div>

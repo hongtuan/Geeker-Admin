@@ -45,6 +45,9 @@
                 <el-button @click="restartGw">重启网关服务</el-button>
               </el-col>
             </el-row>
+            <el-row>
+              <el-col><span>提示：修改基本配置后，需要重启网关服务。(如果设备重启，以太网Mac地址需要重新修改)</span></el-col>
+            </el-row>
           </div>
         </el-card>
       </el-col>
@@ -52,7 +55,7 @@
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
-              <span>服务器以太网设置</span>
+              <span>服务器以太网设置(保存后需要重启设备方可生效)</span>
             </div>
           </template>
           <div style="width: 100%; height: 210px; overflow: auto">
@@ -77,7 +80,7 @@
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
-              <span>INS数据处理配置</span>
+              <span>INS数据处理配置(保存后重启网关服务方可生效)</span>
             </div>
           </template>
           <div style="width: 100%; height: 296px; overflow: auto">
@@ -100,7 +103,7 @@
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
-              <span>CPT7数据处理配置</span>
+              <span>CPT7数据处理配置(保存后重启网关服务方可生效)</span>
             </div>
           </template>
           <div style="width: 100%; height: 296px; overflow: auto">
