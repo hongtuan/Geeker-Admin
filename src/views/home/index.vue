@@ -9,7 +9,7 @@
     </template>
     <el-row>
       <el-col>
-        <el-input type="textarea" :value="logData" :rows="34" :readonly="true"></el-input>
+        <el-input type="textarea" :value="logData" :rows="32" :readonly="true"></el-input>
       </el-col>
     </el-row>
   </el-card>
@@ -23,9 +23,9 @@ const logData = ref({});
 const loadData = async () => {
   // 请求后端服务加载数据
   const { data } = await getLogContent();
-  console.log(JSON.stringify(data, null, 2));
+  // console.log(JSON.stringify(data, null, 2));
   logData.value = data.logData;
-  console.log(logData.value);
+  // console.log(logData.value);
 };
 const restartGw = async () => {
   // 请求后端服务加载数据

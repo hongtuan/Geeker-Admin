@@ -79,3 +79,11 @@ export const getAppVerInfo = () => {
 export const uploadAppFile = (params: any) => {
   return http.post<any>(PORT1 + `/uploadappfile`, params);
 };
+// 6.3
+export const getAdminVerInfo = () => {
+  return http.get<any>(PORT1 + `/getadminverinfo`);
+};
+// 6.4
+export const uploadAdminFile = (params: any) => {
+  return http.post<any>(PORT1 + `/uploadadminfile`, params);
+};
