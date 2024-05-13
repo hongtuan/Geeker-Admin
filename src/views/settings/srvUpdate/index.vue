@@ -54,7 +54,7 @@
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
-          <span>网关管理程序</span>
+          <span>网关管理程序(升级后需要重启设备)</span>
         </div>
       </template>
       <div style="width: 100%; height: 250px; overflow: auto">

@@ -1,8 +1,12 @@
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
-// 1
+// 1.1
 export const getLogContent = () => {
   return http.get<any>(PORT1 + `/loadlog`);
+};
+// 1.3
+export const clearLogFile = () => {
+  return http.get<any>(PORT1 + `/clearlogfile`);
 };
 // 2.1
 export const getSysTime = () => {
