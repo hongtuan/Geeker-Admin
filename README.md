@@ -49,6 +49,8 @@ git clone https://gitee.com/HalseySpicy/Geeker-Admin.git
 # GitHub
 git clone https://github.com/HalseySpicy/Geeker-Admin.git
 # install pnpm
+sudo chown vsdev:vsdev /opt/node-v20.10.0-linux-x64 -R
+ls -lh /opt/node-v20.10.0-linux-x64
 npm install -g pnpm
 ```
 

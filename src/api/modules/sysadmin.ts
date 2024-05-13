@@ -70,3 +70,12 @@ export const setCPT7Conf = (params: any) => {
 export const loadCPT7ConfDefault = () => {
   return http.get<any>(PORT1 + `/loadcpt7confdefault`);
 };
+
+// 6.1
+export const getAppVerInfo = () => {
+  return http.get<any>(PORT1 + `/getappverinfo`);
+};
+// 6.2
+export const uploadAppFile = (params: any) => {
+  return http.post<any>(PORT1 + `/uploadappfile`, params);
+};
