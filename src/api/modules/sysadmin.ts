@@ -4,9 +4,20 @@ import http from "@/api";
 export const getLogContent = () => {
   return http.get<any>(PORT1 + `/loadlog`);
 };
-// 1.3
+// 1.2
 export const clearLogFile = () => {
   return http.get<any>(PORT1 + `/clearlogfile`);
+};
+// 1.3
+export const downloadLog = () => {
+  return http.get<any>(PORT1 + `/downloadlog`);
+};
+// 1.4
+export const downloadLogGz = () => {
+  // 下载二进制格式文件，需要调用download方法，
+  // TODO:  从后台提取文件名，需要进一步研究。
+  return http.download(PORT1 + `/downloadloggz`);
+  // return http.download_with_filename(PORT1 + `/downloadloggz`);
 };
 // 2.1
 export const getSysTime = () => {

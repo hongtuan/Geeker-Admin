@@ -4,8 +4,10 @@
       <div class="card-header">
         <span>网关运行日志</span>
         <div>
-          <el-button @click="loadData">刷新</el-button>
-          <el-button @click="clearLog">清理</el-button>
+          <el-button @click="loadData">刷新日志(最新200行)</el-button>
+          <!-- <el-button @click="triggerFileDownload">下载</el-button> -->
+          <el-button @click="triggerFileGzDownload">下载日志</el-button>
+          <el-button @click="clearLog">清理日志</el-button>
           <el-button @click="restartGw">重启网关服务</el-button>
         </div>
       </div>
@@ -20,8 +22,8 @@
 
 <script setup lang="ts" name="home">
 import { ref, onMounted } from "vue";
-
-import { getLogContent, clearLogFile, restartGwSrv } from "@/api/modules/sysadmin";
+import { saveAs } from "file-saver";
+import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv } from "@/api/modules/sysadmin";
 const logData = ref({});
 const loadData = async () => {
   // 请求后端服务加载数据
@@ -38,6 +40,30 @@ const clearLog = async () => {
   // console.log(logData.value);
 };
 
+// const triggerFileDownload = async () => {
+//   try {
+//     // 请求后端服务加载数据
+//     const resultData = await downloadLog();
+//     const blob = new Blob([resultData as unknown as BlobPart], { type: "text/plain" });
+//     // 使用 FileSaver API 保存文件
+//     saveAs(blob, "udpsrv.log");
+//   } catch (error) {
+//     console.error("Failed to download file:", error);
+//   }
+// };
+
+const triggerFileGzDownload = async () => {
+  try {
+    // 请求后端服务加载数据
+    const resultData = await downloadLogGz();
+    // 构建 Blob 对象
+    const blob = new Blob([resultData as unknown as BlobPart], { type: "application/octet-stream" });
+    // 使用 FileSaver API 保存文件
+    saveAs(blob, "udpsrv_post.tar.gz");
+  } catch (error) {
+    console.error("Failed to download file:", error);
+  }
+};
 const restartGw = async () => {
   // 请求后端服务加载数据
   const { data } = await restartGwSrv();

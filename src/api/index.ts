@@ -105,6 +105,39 @@ class RequestHttp {
   download(url: string, params?: object, _object = {}): Promise<BlobPart> {
     return this.service.post(url, params, { ..._object, responseType: "blob" });
   }
+
+  // download_with_filename(url: string, params?: object, _object = {}): Promise<{ blob: BlobPart; filename: string }> {
+  //   return this.service.post(url, params, { ..._object, responseType: "blob" }).then(response => {
+  //     const contentDisposition = response.headers["content-disposition"];
+  //     let filename = "default_filename.tar.gz"; // 默认文件名，用于后端没有提供文件名的情况
+
+  //     if (contentDisposition) {
+  //       const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+  //       let matches = filenameRegex.exec(contentDisposition);
+  //       if (matches != null && matches[1]) {
+  //         filename = matches[1].replace(/['"]/g, "");
+  //       }
+  //     }
+
+  //     return { blob: response.data, filename };
+  //   });
+  // }
+  async download_with_filename(url: string, params?: object, _object = {}): Promise<{ blob: BlobPart; filename: string }> {
+    const response = await this.service.post(url, params, { ..._object, responseType: "blob" });
+
+    const contentDisposition = response.headers["content-disposition"];
+    let filename = "default_filename.tar.gz"; // 默认文件名，用于后端没有提供文件名的情况
+
+    if (contentDisposition) {
+      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      let matches = filenameRegex.exec(contentDisposition);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
+      }
+    }
+
+    return { blob: response.data, filename };
+  }
 }
 
 export default new RequestHttp(config);
