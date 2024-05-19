@@ -59,6 +59,10 @@ export const setTJTestMode = (params: any) => {
 export const restartGwSrv = () => {
   return http.get<any>(PORT1 + `/restartgwsrv`);
 };
+// 3.9
+export const rebootDev = () => {
+  return http.get<any>(PORT1 + `/rebootdev`);
+};
 
 // 4.1
 export const getINSConf = () => {

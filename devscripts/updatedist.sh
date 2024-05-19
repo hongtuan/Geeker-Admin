@@ -1,8 +1,9 @@
 #!/bin/sh
+export remoteHost=crv214
 # send package to remote server
-scp testDir/dist.tar.gz crv107:/data/updf
+scp testDir/dist.tar.gz $remoteHost:/data/updf
 # update remote server
-./devscripts/rmtupdate.sh crv107 dist.tar.gz
+./devscripts/rmtupdate.sh $remoteHost dist.tar.gz
 # clean up local package
 rm -rf /data/lgwapp/gwadmin/dist
 # update local package

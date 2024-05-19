@@ -69,6 +69,7 @@
                 <el-button style="margin-right: 10px" @click="refreshEthConf">刷新</el-button>
                 <el-button style="margin-right: 10px" @click="getEthConfDefault">加载默认配置</el-button>
                 <el-button @click="saveEthConf">保存</el-button>
+                <el-button @click="rebootDevCall">重启设备</el-button>
               </el-col>
             </el-row>
           </div>
@@ -128,7 +129,18 @@
 
 <script setup lang="ts" name="srvConfig">
 import { ref, onMounted } from "vue";
-import { getSysTime, setSysTime, getEthMac, setEthMac, getEthConf, setEthConf, loadEthConfDefault } from "@/api/modules/sysadmin";
+import { ElMessageBox, ElMessage } from "element-plus";
+// import { MessageBox } from "element-plus";
+import {
+  getSysTime,
+  setSysTime,
+  getEthMac,
+  setEthMac,
+  rebootDev,
+  getEthConf,
+  setEthConf,
+  loadEthConfDefault
+} from "@/api/modules/sysadmin";
 import {
   getINSConf,
   setINSConf,
@@ -238,12 +250,34 @@ const getCpt7ConfDefault = async () => {
   cpt7Conf.value = data.cpt7Conf;
 };
 
+// import { MessageBox } from 'element-ui';
+
+const rebootDevCall = async () => {
+  // 显示操作确认提示
+  ElMessageBox.confirm("你确认要重启网关设备吗？", "操作确认", {
+    confirmButtonText: "是",
+    cancelButtonText: "否",
+    type: "info"
+  })
+    .then(async () => {
+      // 请求后端服务加载数据
+      const { data } = await rebootDev();
+      console.log(data);
+      ElMessage({
+        message: `设备重启完成，稍等30秒后重新访问。`,
+        type: "info"
+      });
+    })
+    .catch(() => {
+      // 用户点击了取消按钮，不做任何事情
+    });
+};
+
 const restartGw = async () => {
   // 请求后端服务加载数据
   const { data } = await restartGwSrv();
   console.log(data);
 };
-
 const loadTJTestMode = async () => {
   // 请求后端服务加载数据
   const { data } = await getTJTestMode();
