@@ -15,7 +15,7 @@
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
           <el-col style="text-align: left" flex>
             <span class="margin-right-10">服务程序版本：</span>
-            <el-input type="input" v-model="appVerInfo" class="margin-right-10" style="width: 265px" readonly></el-input>
+            <el-input type="input" v-model="appVerInfo" class="margin-right-10" style="width: 410px" readonly></el-input>
             <el-button @click="refreshAppVerInfo">刷新</el-button>
           </el-col>
         </el-row>
@@ -61,7 +61,7 @@
         <el-row type="flex" justify="start" style="margin-bottom: 10px">
           <el-col style="text-align: left" flex>
             <span class="margin-right-10">管理程序版本：</span>
-            <el-input type="input" v-model="adminVerInfo" class="margin-right-10" style="width: 265px" readonly></el-input>
+            <el-input type="input" v-model="adminVerInfo" class="margin-right-10" style="width: 410px" readonly></el-input>
             <el-button @click="refreshAdminVerInfo">刷新</el-button>
           </el-col>
         </el-row>

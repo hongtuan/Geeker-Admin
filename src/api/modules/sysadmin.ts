@@ -19,6 +19,15 @@ export const downloadLogGz = () => {
   return http.download(PORT1 + `/downloadloggz`);
   // return http.download_with_filename(PORT1 + `/downloadloggz`);
 };
+// 1.4
+export const getLogShowConf = () => {
+  return http.get<any>(PORT1 + `/loadlogshowconf`);
+};
+// 1.5
+export const updateLogShowConf = (params: any) => {
+  return http.post<any>(PORT1 + `/updatelogshowconf`, params);
+};
+
 // 2.1
 export const getSysTime = () => {
   return http.get<any>(PORT1 + `/getsystime`);

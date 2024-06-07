@@ -43,11 +43,29 @@
                 <el-button @click="loadTJTestMode">刷新</el-button>
                 <el-button @click="saveTJTestMode">保存</el-button>
                 <el-button @click="restartGw">重启网关服务</el-button>
-                <el-button @click="stopGw">停止网关服务</el-button>
               </el-col>
             </el-row>
-            <el-row>
-              <el-col><span>提示：修改基本配置后，需要重启网关服务。(如果设备重启，以太网Mac地址需要重新修改)</span></el-col>
+            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+              <el-col :span="5" style="text-align: right"><span>日志配置：</span></el-col>
+              <el-col :span="8">
+                <el-checkbox v-model="logShowConf.show_filter_pkg">
+                  <span>UDP包过滤</span>
+                </el-checkbox>
+                <el-checkbox v-model="logShowConf.show_loc_info">
+                  <span>坐标数据</span>
+                </el-checkbox>
+                <el-checkbox v-model="logShowConf.show_pkg_info">
+                  <span>UDP包摘要</span>
+                </el-checkbox>
+                <el-checkbox v-model="logShowConf.show_sec_info">
+                  <span>偏转任务</span>
+                </el-checkbox>
+              </el-col>
+              <el-col :span="9">
+                <el-button @click="loadLogShowConf">刷新</el-button>
+                <el-button @click="saveLogShowConf">保存</el-button>
+                <el-button @click="restartGw">重启网关服务</el-button>
+              </el-col>
             </el-row>
           </div>
         </el-card>
@@ -140,9 +158,7 @@ import {
   rebootDev,
   getEthConf,
   setEthConf,
-  loadEthConfDefault
-} from "@/api/modules/sysadmin";
-import {
+  loadEthConfDefault,
   getINSConf,
   setINSConf,
   loadINSConfDefault,
@@ -152,8 +168,10 @@ import {
   getTJTestMode,
   setTJTestMode,
   restartGwSrv,
-  stopGwSrv
+  getLogShowConf,
+  updateLogShowConf
 } from "@/api/modules/sysadmin";
+// 导入共用方法
 import { confirmAction } from "@/api/modules/utilfuns";
 // import { ElMessage } from 'element-plus';
 // import { getSysTime, setSysTime } from '@/api/settings/srvConfig';
@@ -163,6 +181,7 @@ const ethConf = ref();
 const insConf = ref();
 const cpt7Conf = ref();
 const tjTestMode = ref(false);
+const logShowConf = ref({ show_filter_pkg: false, show_pkg_info: false, show_loc_info: false, show_sec_info: false });
 
 const refreshTime = async () => {
   // 请求后端服务加载数据
@@ -279,14 +298,8 @@ const rebootDevCall = async () => {
 const restartGw = async () => {
   // 显示操作确认提示
   confirmAction("你确认要重启网关服务吗？", restartGwSrv, "网关服务已重启。");
-  // 请求后端服务加载数据
-  // const { data } = await restartGwSrv();
-  // console.log(data);
 };
-const stopGw = async () => {
-  // 显示操作确认提示
-  confirmAction("你确认要停止网关服务吗？", stopGwSrv, "网关服务已停止。");
-};
+
 const loadTJTestMode = async () => {
   // 请求后端服务加载数据
   const { data } = await getTJTestMode();
@@ -302,6 +315,22 @@ const saveTJTestMode = async () => {
   console.log(data);
 };
 
+const loadLogShowConf = async () => {
+  // 请求后端服务加载数据
+  const { data } = await getLogShowConf();
+  console.log(JSON.stringify(data, null, 2));
+  logShowConf.value = data;
+  console.log(data);
+};
+
+const saveLogShowConf = async () => {
+  // 请求后端服务加载数据
+  // let param = { logShowConf: logShowConf.value };
+  let param = logShowConf.value;
+  const { data } = await updateLogShowConf(param);
+  console.log(data);
+};
+
 const loadData = async () => {
   // 请求后端服务加载数据
   refreshTime();
@@ -310,6 +339,7 @@ const loadData = async () => {
   refreshInsConf();
   refreshCpt7Conf();
   loadTJTestMode();
+  loadLogShowConf();
 };
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());

@@ -9,6 +9,7 @@
           <el-button @click="triggerFileGzDownload">下载日志</el-button>
           <el-button @click="clearLog">清理日志</el-button>
           <el-button @click="restartGw">重启网关服务</el-button>
+          <el-button @click="stopGw">停止网关服务</el-button>
         </div>
       </div>
     </template>
@@ -24,7 +25,7 @@
 import { ref, onMounted } from "vue";
 import { saveAs } from "file-saver";
 import dayjs from "dayjs";
-import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv } from "@/api/modules/sysadmin";
+import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv, stopGwSrv } from "@/api/modules/sysadmin";
 import { confirmAction } from "@/api/modules/utilfuns";
 const logData = ref({});
 const loadData = async () => {
@@ -36,13 +37,9 @@ const loadData = async () => {
 };
 const clearLog = async () => {
   // 请求后端服务加载数据
-  // const { data } = await clearLogFile();
-  // // console.log(JSON.stringify(data, null, 2));
-  // logData.value = data.logData;
   confirmAction("确定要清理运行日志吗？", clearLogFile, "运行日志清理完成。");
   // 清理完毕后，重新加载
   loadData();
-  // console.log(logData.value);
 };
 
 const triggerFileGzDownload = async () => {
@@ -66,8 +63,10 @@ const triggerFileGzDownload = async () => {
 const restartGw = async () => {
   // 请求后端服务加载数据
   confirmAction("确定要重启网关服务吗？", restartGwSrv, "网关服务重启完成。");
-  // const { data } = await restartGwSrv();
-  // console.log(data);
+};
+const stopGw = async () => {
+  // 显示操作确认提示
+  confirmAction("你确认要停止网关服务吗？", stopGwSrv, "网关服务已停止。");
 };
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
