@@ -43,6 +43,7 @@
                 <el-button @click="loadTJTestMode">刷新</el-button>
                 <el-button @click="saveTJTestMode">保存</el-button>
                 <el-button @click="restartGw">重启网关服务</el-button>
+                <el-button @click="stopGw">停止网关服务</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -150,8 +151,10 @@ import {
   loadCPT7ConfDefault,
   getTJTestMode,
   setTJTestMode,
-  restartGwSrv
+  restartGwSrv,
+  stopGwSrv
 } from "@/api/modules/sysadmin";
+import { confirmAction } from "@/api/modules/utilfuns";
 // import { ElMessage } from 'element-plus';
 // import { getSysTime, setSysTime } from '@/api/settings/srvConfig';
 const sysTime = ref();
@@ -274,9 +277,15 @@ const rebootDevCall = async () => {
 };
 
 const restartGw = async () => {
+  // 显示操作确认提示
+  confirmAction("你确认要重启网关服务吗？", restartGwSrv, "网关服务已重启。");
   // 请求后端服务加载数据
-  const { data } = await restartGwSrv();
-  console.log(data);
+  // const { data } = await restartGwSrv();
+  // console.log(data);
+};
+const stopGw = async () => {
+  // 显示操作确认提示
+  confirmAction("你确认要停止网关服务吗？", stopGwSrv, "网关服务已停止。");
 };
 const loadTJTestMode = async () => {
   // 请求后端服务加载数据

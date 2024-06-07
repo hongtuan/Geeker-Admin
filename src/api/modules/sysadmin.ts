@@ -63,7 +63,10 @@ export const restartGwSrv = () => {
 export const rebootDev = () => {
   return http.get<any>(PORT1 + `/rebootdev`);
 };
-
+// 3.10
+export const stopGwSrv = () => {
+  return http.get<any>(PORT1 + `/stopgwsrv`);
+};
 // 4.1
 export const getINSConf = () => {
   return http.get<any>(PORT1 + `/getinsconf`);

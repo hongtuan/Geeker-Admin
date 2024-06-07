@@ -23,7 +23,9 @@
 <script setup lang="ts" name="home">
 import { ref, onMounted } from "vue";
 import { saveAs } from "file-saver";
+import dayjs from "dayjs";
 import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv } from "@/api/modules/sysadmin";
+import { confirmAction } from "@/api/modules/utilfuns";
 const logData = ref({});
 const loadData = async () => {
   // 请求后端服务加载数据
@@ -34,23 +36,14 @@ const loadData = async () => {
 };
 const clearLog = async () => {
   // 请求后端服务加载数据
-  const { data } = await clearLogFile();
-  // console.log(JSON.stringify(data, null, 2));
-  logData.value = data.logData;
+  // const { data } = await clearLogFile();
+  // // console.log(JSON.stringify(data, null, 2));
+  // logData.value = data.logData;
+  confirmAction("确定要清理运行日志吗？", clearLogFile, "运行日志清理完成。");
+  // 清理完毕后，重新加载
+  loadData();
   // console.log(logData.value);
 };
-
-// const triggerFileDownload = async () => {
-//   try {
-//     // 请求后端服务加载数据
-//     const resultData = await downloadLog();
-//     const blob = new Blob([resultData as unknown as BlobPart], { type: "text/plain" });
-//     // 使用 FileSaver API 保存文件
-//     saveAs(blob, "udpsrv.log");
-//   } catch (error) {
-//     console.error("Failed to download file:", error);
-//   }
-// };
 
 const triggerFileGzDownload = async () => {
   try {
@@ -58,16 +51,23 @@ const triggerFileGzDownload = async () => {
     const resultData = await downloadLogGz();
     // 构建 Blob 对象
     const blob = new Blob([resultData as unknown as BlobPart], { type: "application/octet-stream" });
+
+    // 生成文件名,加入时间串
+    const timestamp = dayjs().format("YYYYMMDDHHmm");
+    const filename = `udpsrv_log_${timestamp}.tar.gz`;
+
     // 使用 FileSaver API 保存文件
-    saveAs(blob, "udpsrv_post.tar.gz");
+    saveAs(blob, filename);
+    // saveAs(blob, "udpsrv_post.tar.gz");
   } catch (error) {
     console.error("Failed to download file:", error);
   }
 };
 const restartGw = async () => {
   // 请求后端服务加载数据
-  const { data } = await restartGwSrv();
-  console.log(data);
+  confirmAction("确定要重启网关服务吗？", restartGwSrv, "网关服务重启完成。");
+  // const { data } = await restartGwSrv();
+  // console.log(data);
 };
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
