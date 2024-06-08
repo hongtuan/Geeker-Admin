@@ -4,7 +4,7 @@
       <div class="card-header">
         <span>网关运行日志</span>
         <div>
-          <el-button @click="loadData">刷新日志(最新200行)</el-button>
+          <el-button @click="loadData"> 刷新日志(最新{{ logRowCount }}行) </el-button>
           <!-- <el-button @click="triggerFileDownload">下载</el-button> -->
           <el-button @click="triggerFileGzDownload">下载日志</el-button>
           <el-button @click="clearLog">清理日志</el-button>
@@ -28,11 +28,13 @@ import dayjs from "dayjs";
 import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv, stopGwSrv } from "@/api/modules/sysadmin";
 import { confirmAction } from "@/api/modules/utilfuns";
 const logData = ref({});
+const logRowCount = ref(500);
 const loadData = async () => {
   // 请求后端服务加载数据
   const { data } = await getLogContent();
   // console.log(JSON.stringify(data, null, 2));
   logData.value = data.logData;
+  logRowCount.value = data.logRowCount;
   // console.log(logData.value);
 };
 const clearLog = async () => {
