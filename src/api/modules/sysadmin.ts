@@ -118,3 +118,12 @@ export const getAdminVerInfo = () => {
 export const uploadAdminFile = (params: any) => {
   return http.post<any>(PORT1 + `/uploadadminfile`, params);
 };
+
+// 7.1 UDP包过滤趋势图
+export const getUdpFilterTrend = () => {
+  return http.get<any>(PORT1 + `/getudpfiltertrend`);
+};
+// 7.2 W2C proc
+export const getW2CProcTrend = () => {
+  return http.get<any>(PORT1 + `/getw2cproctrend`);
+};

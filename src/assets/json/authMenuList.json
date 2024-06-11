@@ -62,6 +62,51 @@
     },
 
     {
+      "path": "/datamgr",
+      "name": "datamgr",
+      "redirect": "/datamgr/pkgFilter",
+      "meta": {
+        "icon": "Setting",
+        "title": "数据管理",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/datamgr/pkgFilter",
+          "name": "pkgFilter",
+          "component": "/datamgr/pkgFilter/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "UDP包过滤",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/datamgr/w2cProc",
+          "name": "w2cProc",
+          "component": "/datamgr/w2cProc/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "偏转处理",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    },
+
+    {
       "path": "/about/index",
       "name": "about",
       "component": "/about/index",
