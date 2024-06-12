@@ -24,13 +24,19 @@
       <el-col>
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
-          <el-table-column prop="UP_FT_TIMES" label="包采集次数"></el-table-column>
-          <el-table-column prop="UP_INS_COUNT" label="INS采集包数"></el-table-column>
-          <el-table-column prop="UP_INS_RP_COUNT" label="INS包转发数"></el-table-column>
-          <el-table-column prop="INS_LOST_PKG" label="INS包丢包数"></el-table-column>
-          <el-table-column prop="UP_CPT7_COUNT" label="CPT7采集包数"></el-table-column>
-          <el-table-column prop="UP_CPT7_RP_COUNT" label="CPT7包转发数"></el-table-column>
-          <el-table-column prop="CPT7_LOST_PKG" label="CPT7包丢包数"></el-table-column>
+          <el-table-column prop="UP_FT_TIMES" label="采集次数"></el-table-column>
+          <el-table-column prop="UP_INS_CT" label="INS需转发"></el-table-column>
+          <el-table-column prop="UP_INS_RP_CT" label="已转发"></el-table-column>
+          <el-table-column prop="INS_LOST_PKG" label="转发堆积"></el-table-column>
+          <el-table-column prop="UP_INS_LOC_CT" label="需偏转发送"></el-table-column>
+          <el-table-column prop="UP_INS_SD_CT" label="已偏转发送"></el-table-column>
+          <el-table-column prop="INS_LOST_LOC_PKG" label="偏转堆积"></el-table-column>
+          <el-table-column prop="UP_CPT7_CT" label="CPT7需转发"></el-table-column>
+          <el-table-column prop="UP_CPT7_RP_CT" label="已转发"></el-table-column>
+          <el-table-column prop="CPT7_LOST_PKG" label="转发堆积"></el-table-column>
+          <el-table-column prop="UP_CPT7_LOC_CT" label="需偏转发送"></el-table-column>
+          <el-table-column prop="UP_CPT7_SD_CT" label="已偏转发送"></el-table-column>
+          <el-table-column prop="CPT7_LOST_LOC_PKG" label="偏转堆积"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -132,36 +138,55 @@ const loadData = async () => {
     }
     let series = optionValue.series as any[];
     series.length = 0; // 清空数组
-    let datas = logData["columnNames"].slice(1);
-    for (let data of datas) {
+    let columnNames = logData["columnNames"].slice(1);
+    for (let columnName of columnNames) {
       let serie = {
-        name: data,
+        name: columnName,
         type: "line",
         stack: "Total",
         areaStyle: {},
         emphasis: {
           focus: "series"
         },
-        data: logData[data]
+        data: logData[columnName]
       };
       series.push(serie);
     }
-    let tbDatas = logData["columnNames"].slice(1);
+    // let columnNames = logData["columnNames"].slice(1);
     // 在tbDatas中添加两列
-    tbDatas.splice(4, 0, "INS_LOST_PKG");
-    tbDatas.splice(6, 0, "CPT7_LOST_PKG");
+    columnNames.splice(4, 0, "INS_LOST_PKG");
+    columnNames.splice(7, 0, "INS_LOST_LOC_PKG");
+    columnNames.splice(10, 0, "CPT7_LOST_PKG");
+    columnNames.splice(13, 0, "CPT7_LOST_LOC_PKG");
+    console.log("logData.reply_not_loc_pkg=", logData.reply_not_loc_pkg);
     // 将数据转换为适合表格展示的数据
     logData2Table.value = [];
-    for (let i = 0; i < logData["LOG_TIME"].length; i++) {
+    let rowCount = logData["LOG_TIME"].length;
+    // for (let i = 0; i < logData["LOG_TIME"].length; i++) {
+    for (let i = rowCount - 1; i >= 0; i--) {
       let row: { [key: string]: any } = {};
       row["LOG_TIME"] = logData["LOG_TIME"][i];
-      for (let data of tbDatas) {
-        if (data === "INS_LOST_PKG") {
-          row[data] = 2 * row["UP_INS_COUNT"] - row["UP_INS_RP_COUNT"];
-        } else if (data === "CPT7_LOST_PKG") {
-          row[data] = 2 * row["UP_CPT7_COUNT"] - row["UP_CPT7_RP_COUNT"];
-        } else {
-          row[data] = logData[data][i];
+      for (let columnName of columnNames) {
+        switch (columnName) {
+          case "INS_LOST_PKG":
+            if (logData.reply_not_loc_pkg) {
+              row[columnName] = 2 * row["UP_INS_CT"] - row["UP_INS_LOC_CT"] - row["UP_INS_RP_CT"];
+            } else {
+              row[columnName] = row["UP_INS_CT"] - row["UP_INS_RP_CT"];
+            }
+            break;
+          case "INS_LOST_LOC_PKG":
+            row[columnName] = row["UP_INS_LOC_CT"] - row["UP_INS_SD_CT"];
+            break;
+          case "CPT7_LOST_PKG":
+            row[columnName] = row["UP_CPT7_CT"] - row["UP_CPT7_RP_CT"];
+            break;
+          case "CPT7_LOST_LOC_PKG":
+            row[columnName] = row["UP_CPT7_LOC_CT"] - row["UP_CPT7_SD_CT"];
+            break;
+          default:
+            row[columnName] = logData[columnName][i];
+            break;
         }
       }
       // 填充行数据

@@ -46,7 +46,7 @@
               </el-col>
             </el-row>
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
-              <el-col :span="5" style="text-align: right"><span>日志配置：</span></el-col>
+              <el-col :span="5" style="text-align: right"><span>日志及服务配置：</span></el-col>
               <el-col :span="8">
                 <el-checkbox v-model="logShowConf.show_filter_pkg">
                   <span>UDP包过滤</span>
@@ -59,6 +59,9 @@
                 </el-checkbox>
                 <el-checkbox v-model="logShowConf.show_sec_info">
                   <span>偏转任务</span>
+                </el-checkbox>
+                <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
+                  <span>转发非坐标报文</span>
                 </el-checkbox>
               </el-col>
               <el-col :span="9">
@@ -181,7 +184,13 @@ const ethConf = ref();
 const insConf = ref();
 const cpt7Conf = ref();
 const tjTestMode = ref(false);
-const logShowConf = ref({ show_filter_pkg: false, show_pkg_info: false, show_loc_info: false, show_sec_info: false });
+const logShowConf = ref({
+  show_filter_pkg: false,
+  show_pkg_info: false,
+  show_loc_info: false,
+  show_sec_info: false,
+  reply_not_loc_pkg: false
+});
 
 const refreshTime = async () => {
   // 请求后端服务加载数据

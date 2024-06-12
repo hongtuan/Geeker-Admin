@@ -217,6 +217,7 @@ const doUploadTaskAdmin = async () => {
   // 上传成功后，清理文件列表
   uploadRefAdmin.value?.clearFiles();
   uploadDisabledAdmin.value = true;
+  ElMessage.warning("升级设备管理程序后，设备会自动重启，请稍后刷新本页面。");
 };
 
 const refreshAppVerInfo = async () => {
