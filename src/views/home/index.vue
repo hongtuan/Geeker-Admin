@@ -70,6 +70,7 @@ const stopGw = async () => {
   // 显示操作确认提示
   confirmAction("你确认要停止网关服务吗？", stopGwSrv, "网关服务已停止。");
 };
+
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
 </script>

@@ -66,8 +66,8 @@
       "name": "datamgr",
       "redirect": "/datamgr/pkgFilter",
       "meta": {
-        "icon": "Setting",
-        "title": "数据管理",
+        "icon": "MessageBox",
+        "title": "服务监测",
         "isLink": "",
         "isHide": false,
         "isFull": false,
@@ -80,8 +80,8 @@
           "name": "pkgFilter",
           "component": "/datamgr/pkgFilter/index",
           "meta": {
-            "icon": "Menu",
-            "title": "UDP包过滤",
+            "icon": "TrendCharts",
+            "title": "数据包处理",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -94,8 +94,22 @@
           "name": "w2cProc",
           "component": "/datamgr/w2cProc/index",
           "meta": {
-            "icon": "Menu",
-            "title": "偏转处理",
+            "icon": "TrendCharts",
+            "title": "偏转任务处理",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/datamgr/srvEvt",
+          "name": "srvEvt",
+          "component": "/datamgr/srvEvt/index",
+          "meta": {
+            "icon": "Tickets",
+            "title": "服务事件查看",
             "isLink": "",
             "isHide": false,
             "isFull": false,

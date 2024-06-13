@@ -127,3 +127,16 @@ export const getUdpFilterTrend = () => {
 export const getW2CProcTrend = () => {
   return http.get<any>(PORT1 + `/getw2cproctrend`);
 };
+// 7.3 重置数据库
+export const resetDevDb = () => {
+  return http.get<any>(PORT1 + `/resetdevdb`);
+};
+// 7.4 重置数据库
+export const getLastEvtLog = () => {
+  return http.get<any>(PORT1 + `/getlastevtlog`);
+};
+
+// 7.5 重置数据库
+export const downloadGwDb = () => {
+  return http.download(PORT1 + `/downloadgwdb`);
+};
