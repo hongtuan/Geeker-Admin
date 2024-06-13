@@ -24,8 +24,31 @@
         </el-table>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col>
+        <el-space>
+          <span class="highlight-text">接收服务启动时间：</span>
+          <span>{{ capStartTime }} </span>
+          <span class="highlight-text">开始接收数据：</span>
+          <span>{{ refRowCount }} 秒.</span>
+          <span class="highlight-text">已运行：</span>
+          <span>{{ captureRunningInfo }}</span>
+        </el-space>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col>
+        <el-table :data="tableInfo" style="width: 100%" border max-height="80">
+          <el-table-column prop="GW_EVENT_COUNT" label="事件记录数" width="180"></el-table-column>
+          <el-table-column prop="UP_FT_RP_LOG_COUNT" label="包处理记录数"></el-table-column>
+          <el-table-column prop="W2C_PROC_LOG_COUNT" label="偏转任务记录数"></el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
   </el-card>
 </template>
+
 <script setup lang="ts" name="srvEvt">
 import { ref, onMounted, onUnmounted } from "vue";
 import { saveAs } from "file-saver";
@@ -33,6 +56,9 @@ import dayjs from "dayjs";
 import { getLastEvtLog, resetDevDb, downloadGwDb } from "@/api/modules/sysadmin";
 import { confirmAction } from "@/api/modules/utilfuns";
 const isAutoRefresh = ref(false);
+const capStartTime = ref("");
+const captureRunningInfo = ref("");
+const refRowCount = ref(0);
 const setAutoRefresh = () => {
   if (isAutoRefresh.value) {
     // 设置每隔10秒刷新一次。
@@ -46,6 +72,7 @@ const setAutoRefresh = () => {
 };
 
 let logData2Table = ref<{ [key: string]: any }[]>([]);
+let tableInfo = ref<{ [key: string]: number }[]>([]);
 // 自动刷新的计时器
 let intervalId: number | undefined;
 const loadData = async () => {
@@ -53,6 +80,12 @@ const loadData = async () => {
   const { data } = await getLastEvtLog();
   // console.log(JSON.stringify(data, null, 2));
   logData2Table.value = data.rowData;
+  tableInfo.value = data.tableInfo.rowData;
+  capStartTime.value = data.capStartTime;
+  captureRunningInfo.value = data.captureRunTimeInfo;
+  let captureRunningSeconds = data.captureRunTimeSeconds;
+  // 每秒记录一条日志。
+  refRowCount.value = captureRunningSeconds;
 };
 const resetGwDevDb = async () => {
   // 显示操作确认提示
