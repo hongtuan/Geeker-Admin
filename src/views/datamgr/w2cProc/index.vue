@@ -43,7 +43,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { ECOption } from "@/components/ECharts/config";
 import ECharts from "@/components/ECharts/index.vue";
 import { getW2CProcTrend } from "@/api/modules/sysadmin";
-const isAutoRefresh = ref(true);
+const isAutoRefresh = ref(false);
 const setAutoRefresh = () => {
   if (isAutoRefresh.value) {
     // 设置每隔10秒刷新一次。

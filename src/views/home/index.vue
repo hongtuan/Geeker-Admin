@@ -15,20 +15,24 @@
     </template>
     <el-row>
       <el-col>
-        <el-input type="textarea" :value="logData" :rows="32" :readonly="true"></el-input>
+        <!-- <el-input type="textarea" :value="logData" :rows="32" :readonly="true"></el-input> -->
+        <el-input type="textarea" ref="logInput" :value="logData" :rows="32" :readonly="true"></el-input>
       </el-col>
     </el-row>
   </el-card>
 </template>
 
 <script setup lang="ts" name="home">
-import { ref, onMounted } from "vue";
+// import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick, Ref } from "vue";
+import { ElInput } from "element-plus";
 import { saveAs } from "file-saver";
 import dayjs from "dayjs";
 import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv, stopGwSrv } from "@/api/modules/sysadmin";
 import { confirmAction } from "@/api/modules/utilfuns";
 const logData = ref({});
 const logRowCount = ref(500);
+const logInput: Ref<InstanceType<typeof ElInput> | null> = ref(null);
 const loadData = async () => {
   // 请求后端服务加载数据
   const { data } = await getLogContent();
@@ -36,7 +40,13 @@ const loadData = async () => {
   logData.value = data.logData;
   logRowCount.value = data.logRowCount;
   // console.log(logData.value);
+  // 确保 DOM 更新后再滚动到底部
+  await nextTick();
+  if (logInput.value) {
+    logInput.value.$el.scrollTop = logInput.value.$el.scrollHeight;
+  }
 };
+
 const clearLog = async () => {
   // 请求后端服务加载数据
   confirmAction("确定要清理运行日志吗？", clearLogFile, "运行日志清理完成。");

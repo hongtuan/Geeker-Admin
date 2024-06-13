@@ -17,7 +17,7 @@
     </template>
     <el-row>
       <el-col>
-        <el-table :data="logData2Table" style="width: 100%" border max-height="480">
+        <el-table :data="logData2Table" style="width: 100%" border max-height="320">
           <el-table-column prop="EVT_TIME" label="事件时间" width="180"></el-table-column>
           <el-table-column prop="EVT_NAME" label="服务事件说明" width="240"></el-table-column>
           <el-table-column prop="EVT_CONTENT" label="服务事件详情"></el-table-column>
