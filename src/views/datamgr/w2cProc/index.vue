@@ -125,17 +125,49 @@ const loadData = async () => {
   logData = data;
   if (logData) {
     // 更新option的数据
+    let columnNames = logData["columnNames"].slice(1);
     let optionValue = option.value as any;
     if (optionValue.legend?.data) {
-      optionValue.legend.data = logData["columnNames"].slice(1);
+      optionValue.legend.data = columnNames;
     }
     if (optionValue.xAxis?.[0]) {
       optionValue.xAxis[0].data = logData["LOG_TIME"];
     }
     let series = optionValue.series as any[];
     series.length = 0; // 清空数组
-    let columnNames = logData["columnNames"].slice(1);
+    // 更新折线图数据
     for (let columnName of columnNames) {
+      // 修改展示每秒接收包的趋势图：修改数据：从0~n-2,开始n=(n+1)-n
+      let pces = []; // pkg cout each second
+      // 填充pces首值，处理策略：按照列名分别放入理论值
+      switch (columnName) {
+        case "W2C_CT":
+          pces.push(110); // 110
+          break;
+        case "W2CED_CT":
+          pces.push(110); // 110
+          break;
+        case "W2C_INS_CT":
+          pces.push(10); // 10
+          break;
+        case "W2CED_INS_CT":
+          pces.push(10); // 10
+          break;
+        case "W2C_CPT7_CT":
+          pces.push(100); // 100
+          break;
+        case "W2CED_CPT7_CT":
+          pces.push(100); // 100
+          break;
+        default:
+          break;
+      }
+      // 填充1-n列,丢弃掉原始数据的第一列
+      let columnData = logData[columnName];
+      for (let i = 1; i < columnData.length; i++) {
+        pces.push(columnData[i] - columnData[i - 1]);
+      }
+
       let serie = {
         name: columnName,
         type: "line",
@@ -144,7 +176,7 @@ const loadData = async () => {
         emphasis: {
           focus: "series"
         },
-        data: logData[columnName]
+        data: pces
       };
       series.push(serie);
     }
@@ -159,15 +191,31 @@ const loadData = async () => {
     for (let i = rowCount - 1; i >= 0; i--) {
       let row: { [key: string]: any } = {};
       row["LOG_TIME"] = logData["LOG_TIME"][i];
+      // for (let columnName of columnNames) {
+      //   if (columnName === "TOTAL_DELAY_PKG") {
+      //     row[columnName] = row["W2C_CT"] - row["W2CED_CT"];
+      //   } else if (columnName === "INS_DELAY_PKG") {
+      //     row[columnName] = row["W2C_INS_CT"] - row["W2CED_INS_CT"];
+      //   } else if (columnName === "CPT7_DELAY_PKG") {
+      //     row[columnName] = row["W2C_CPT7_CT"] - row["W2CED_CPT7_CT"];
+      //   } else {
+      //     row[columnName] = logData[columnName][i];
+      //   }
+      // }
       for (let columnName of columnNames) {
-        if (columnName === "TOTAL_DELAY_PKG") {
-          row[columnName] = row["W2C_CT"] - row["W2CED_CT"];
-        } else if (columnName === "INS_DELAY_PKG") {
-          row[columnName] = row["W2C_INS_CT"] - row["W2CED_INS_CT"];
-        } else if (columnName === "CPT7_DELAY_PKG") {
-          row[columnName] = row["W2C_CPT7_CT"] - row["W2CED_CPT7_CT"];
-        } else {
-          row[columnName] = logData[columnName][i];
+        switch (columnName) {
+          case "TOTAL_DELAY_PKG":
+            row[columnName] = row["W2C_CT"] - row["W2CED_CT"];
+            break;
+          case "INS_DELAY_PKG":
+            row[columnName] = row["W2C_INS_CT"] - row["W2CED_INS_CT"];
+            break;
+          case "CPT7_DELAY_PKG":
+            row[columnName] = row["W2C_CPT7_CT"] - row["W2CED_CPT7_CT"];
+            break;
+          default:
+            row[columnName] = logData[columnName][i];
+            break;
         }
       }
       // 填充行数据

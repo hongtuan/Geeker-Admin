@@ -25,13 +25,13 @@
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
           <el-table-column prop="UP_FT_TIMES" label="采集次数"></el-table-column>
-          <el-table-column prop="UP_INS_CT" label="INS需转发"></el-table-column>
+          <el-table-column prop="UP_INS_CT" label="INS采集数"></el-table-column>
           <el-table-column prop="UP_INS_RP_CT" label="已转发"></el-table-column>
           <el-table-column prop="INS_LOST_PKG" label="转发堆积"></el-table-column>
           <el-table-column prop="UP_INS_LOC_CT" label="需偏转发送"></el-table-column>
           <el-table-column prop="UP_INS_SD_CT" label="已偏转发送"></el-table-column>
           <el-table-column prop="INS_LOST_LOC_PKG" label="偏转堆积"></el-table-column>
-          <el-table-column prop="UP_CPT7_CT" label="CPT7需转发"></el-table-column>
+          <el-table-column prop="UP_CPT7_CT" label="CPT7采集数"></el-table-column>
           <el-table-column prop="UP_CPT7_RP_CT" label="已转发"></el-table-column>
           <el-table-column prop="CPT7_LOST_PKG" label="转发堆积"></el-table-column>
           <el-table-column prop="UP_CPT7_LOC_CT" label="需偏转发送"></el-table-column>
@@ -128,18 +128,59 @@ const loadData = async () => {
   // console.log(JSON.stringify(data, null, 2));
   logData = data;
   if (logData) {
+    // 支撑折现图展示的列数据，从1开始
+    let columnNames = logData["columnNames"].slice(1);
     // 更新option的数据
     let optionValue = option.value as any;
     if (optionValue.legend?.data) {
-      optionValue.legend.data = logData["columnNames"].slice(1);
+      optionValue.legend.data = columnNames;
     }
     if (optionValue.xAxis?.[0]) {
       optionValue.xAxis[0].data = logData["LOG_TIME"];
     }
     let series = optionValue.series as any[];
     series.length = 0; // 清空数组
-    let columnNames = logData["columnNames"].slice(1);
+    // 更新折线图数据
     for (let columnName of columnNames) {
+      // 修改展示每秒接收包的趋势图：修改数据：从0~n-2,开始n=(n+1)-n
+      let pces = []; // pkg cout each second
+      // 填充pces首值，处理策略：按照列名分别放入理论值
+      switch (columnName) {
+        case "UP_FT_TIMES":
+          pces.push(500); // 500
+          break;
+        case "UP_INS_CT":
+          pces.push(210); // 210
+          break;
+        case "UP_INS_RP_CT":
+          pces.push(410); // 210 + 200
+          break;
+        case "UP_INS_LOC_CT":
+          pces.push(10); // 10
+          break;
+        case "UP_INS_SD_CT":
+          pces.push(10); // 10
+          break;
+        case "UP_CPT7_CT":
+          pces.push(100); // 100
+          break;
+        case "UP_CPT7_RP_CT":
+          pces.push(100); // 100
+          break;
+        case "UP_CPT7_LOC_CT":
+          pces.push(100); // 100
+          break;
+        case "UP_CPT7_SD_CT":
+          pces.push(100); // 100
+          break;
+        default:
+          break;
+      }
+      // 填充1-n列,丢弃掉原始数据的第一列
+      let columnData = logData[columnName];
+      for (let i = 1; i < columnData.length; i++) {
+        pces.push(columnData[i] - columnData[i - 1]);
+      }
       let serie = {
         name: columnName,
         type: "line",
@@ -148,10 +189,11 @@ const loadData = async () => {
         emphasis: {
           focus: "series"
         },
-        data: logData[columnName]
+        data: pces
       };
       series.push(serie);
     }
+    // 支撑表格展示的列数据，从1开始
     // let columnNames = logData["columnNames"].slice(1);
     // 在tbDatas中添加两列
     columnNames.splice(4, 0, "INS_LOST_PKG");
