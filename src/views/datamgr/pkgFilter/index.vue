@@ -25,13 +25,13 @@
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
           <el-table-column prop="UP_FT_TIMES" label="采集次数"></el-table-column>
-          <el-table-column prop="UP_INS_CT" label="INS采集数"></el-table-column>
+          <el-table-column prop="UP_INS_CT" label="INS采到包数"></el-table-column>
           <el-table-column prop="UP_INS_RP_CT" label="已转发"></el-table-column>
           <el-table-column prop="INS_LOST_PKG" label="转发堆积"></el-table-column>
           <el-table-column prop="UP_INS_LOC_CT" label="需偏转发送"></el-table-column>
           <el-table-column prop="UP_INS_SD_CT" label="已偏转发送"></el-table-column>
           <el-table-column prop="INS_LOST_LOC_PKG" label="偏转堆积"></el-table-column>
-          <el-table-column prop="UP_CPT7_CT" label="CPT7采集数"></el-table-column>
+          <el-table-column prop="UP_CPT7_CT" label="CPT7采到包数"></el-table-column>
           <el-table-column prop="UP_CPT7_RP_CT" label="已转发"></el-table-column>
           <el-table-column prop="CPT7_LOST_PKG" label="转发堆积"></el-table-column>
           <el-table-column prop="UP_CPT7_LOC_CT" label="需偏转发送"></el-table-column>

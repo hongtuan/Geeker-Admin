@@ -23,4 +23,9 @@
   width: 100%;
   height: 100%;
 }
+.home-bg {
+  max-width: 100%; /* 图片的最大宽度为容器的宽度 */
+  max-height: 100vh; /* 图片的最大高度为视口的高度 */
+  object-fit: contain; /* 在保持宽高比的同时填充元素的内容框 */
+}
 </style>

@@ -24,13 +24,13 @@
       <el-col>
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
-          <el-table-column prop="W2C_CT" label="待偏转"></el-table-column>
+          <el-table-column prop="W2C_CT" label="需偏转包数"></el-table-column>
           <el-table-column prop="W2CED_CT" label="已偏转"></el-table-column>
           <el-table-column prop="TOTAL_DELAY_PKG" label="总堆积"></el-table-column>
-          <el-table-column prop="W2C_INS_CT" label="INS待偏转"></el-table-column>
+          <el-table-column prop="W2C_INS_CT" label="INS需偏转"></el-table-column>
           <el-table-column prop="W2CED_INS_CT" label="INS已偏转"></el-table-column>
           <el-table-column prop="INS_DELAY_PKG" label="INS堆积"></el-table-column>
-          <el-table-column prop="W2C_CPT7_CT" label="CPT7待偏转"></el-table-column>
+          <el-table-column prop="W2C_CPT7_CT" label="CPT7需偏转"></el-table-column>
           <el-table-column prop="W2CED_CPT7_CT" label="CPT7已偏转"></el-table-column>
           <el-table-column prop="CPT7_DELAY_PKG" label="CPT7堆积"></el-table-column>
         </el-table>
