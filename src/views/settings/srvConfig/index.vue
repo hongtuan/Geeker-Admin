@@ -32,19 +32,7 @@
                 <el-button @click="saveEthMac">保存</el-button>
               </el-col>
             </el-row>
-            <el-row type="flex" align="middle" style="margin-bottom: 10px">
-              <el-col :span="5" style="text-align: right"><span>天津工场测试模式：</span></el-col>
-              <el-col :span="8">
-                <el-checkbox v-model="tjTestMode">
-                  <span>{{ tjTestMode ? "打开" : "关闭" }}</span>
-                </el-checkbox>
-              </el-col>
-              <el-col :span="9">
-                <el-button @click="loadTJTestMode">刷新</el-button>
-                <el-button @click="saveTJTestMode">保存</el-button>
-                <el-button @click="restartGw">重启网关服务</el-button>
-              </el-col>
-            </el-row>
+
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" style="text-align: right"><span>日志及服务配置：</span></el-col>
               <el-col :span="8">
@@ -62,6 +50,9 @@
                 </el-checkbox>
                 <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
                   <span>转发非坐标报文</span>
+                </el-checkbox>
+                <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
+                  <span>使用CPT7同步系统时间</span>
                 </el-checkbox>
               </el-col>
               <el-col :span="9">
@@ -83,7 +74,7 @@
           <div style="width: 100%; height: 210px; overflow: auto">
             <el-row type="flex" align="middle">
               <el-col :span="24">
-                <el-input type="textarea" v-model="ethConf" :rows="6"></el-input>
+                <el-input type="textarea" v-model="ethConf" :rows="4"></el-input>
               </el-col>
             </el-row>
             <el-row type="flex" justify="center" align="middle">
@@ -92,6 +83,19 @@
                 <el-button style="margin-right: 10px" @click="getEthConfDefault">加载默认配置</el-button>
                 <el-button @click="saveEthConf">保存</el-button>
                 <el-button @click="rebootDevCall">重启设备</el-button>
+              </el-col>
+            </el-row>
+            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+              <el-col :span="5" style="text-align: right"><span>天津工场测试模式：</span></el-col>
+              <el-col :span="5">
+                <el-checkbox v-model="tjTestMode">
+                  <span>{{ tjTestMode ? "打开" : "关闭" }}</span>
+                </el-checkbox>
+              </el-col>
+              <el-col :span="9">
+                <el-button @click="loadTJTestMode">刷新</el-button>
+                <el-button @click="saveTJTestMode">保存</el-button>
+                <el-button @click="restartGw">重启网关服务</el-button>
               </el-col>
             </el-row>
           </div>
@@ -152,7 +156,6 @@
 <script setup lang="ts" name="srvConfig">
 import { ref, onMounted } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
-// import { MessageBox } from "element-plus";
 import {
   getSysTime,
   setSysTime,
@@ -189,7 +192,8 @@ const logShowConf = ref({
   show_pkg_info: false,
   show_loc_info: false,
   show_sec_info: false,
-  reply_not_loc_pkg: false
+  reply_not_loc_pkg: false,
+  sync_sys_time_by_cpt7: true
 });
 
 const refreshTime = async () => {
@@ -206,6 +210,10 @@ const saveTime = async () => {
   console.log(JSON.stringify(data, null, 2));
   sysTime.value = data.sysTime;
   console.log(sysTime.value);
+  ElMessage({
+    message: "配置更新成功！",
+    type: "info"
+  });
 };
 
 const refreshEthMac = async () => {
@@ -222,6 +230,10 @@ const saveEthMac = async () => {
   const { data } = await setEthMac(param);
   ethMac.value = data.ethMac;
   console.log(ethMac.value);
+  ElMessage({
+    message: "配置更新成功！",
+    type: "info"
+  });
 };
 
 const refreshEthConf = async () => {
@@ -235,6 +247,10 @@ const saveEthConf = async () => {
   let param = { ethConf: ethConf.value };
   const { data } = await setEthConf(param);
   ethConf.value = data.ethConf;
+  ElMessage({
+    message: "配置更新成功！",
+    type: "info"
+  });
 };
 
 const getEthConfDefault = async () => {
@@ -312,9 +328,9 @@ const restartGw = async () => {
 const loadTJTestMode = async () => {
   // 请求后端服务加载数据
   const { data } = await getTJTestMode();
-  console.log(JSON.stringify(data, null, 2));
+  // console.log(JSON.stringify(data, null, 2));
   tjTestMode.value = data.tjTestMode;
-  console.log(data);
+  // console.log(data);
 };
 
 const saveTJTestMode = async () => {
@@ -322,6 +338,10 @@ const saveTJTestMode = async () => {
   let param = { tjTestMode: tjTestMode.value };
   const { data } = await setTJTestMode(param);
   console.log(data);
+  ElMessage({
+    message: "配置更新成功！",
+    type: "info"
+  });
 };
 
 const loadLogShowConf = async () => {
@@ -329,15 +349,19 @@ const loadLogShowConf = async () => {
   const { data } = await getLogShowConf();
   console.log(JSON.stringify(data, null, 2));
   logShowConf.value = data;
-  console.log(data);
+  // console.log(data);
 };
 
 const saveLogShowConf = async () => {
-  // 请求后端服务加载数据
+  // 请求后端服务更新配置
   // let param = { logShowConf: logShowConf.value };
   let param = logShowConf.value;
   const { data } = await updateLogShowConf(param);
   console.log(data);
+  ElMessage({
+    message: "配置更新成功！",
+    type: "info"
+  });
 };
 
 const loadData = async () => {
