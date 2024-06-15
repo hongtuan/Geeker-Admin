@@ -54,6 +54,20 @@
                 <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
                   <span>使用CPT7同步系统时间</span>
                 </el-checkbox>
+                <el-checkbox v-model="logShowConf.proc_ins_pkg">
+                  <span>处理INS报文</span>
+                </el-checkbox>
+                <div style="display: flex; align-items: center">
+                  <span>抓包间隔(ms):</span>
+                  <el-input-number
+                    v-model="logShowConf.timeout_ms"
+                    controls-position="right"
+                    :min="0"
+                    :max="1000"
+                    :step="1"
+                    style="width: 6em"
+                  ></el-input-number>
+                </div>
               </el-col>
               <el-col :span="9">
                 <el-button @click="loadLogShowConf">刷新</el-button>
@@ -193,7 +207,9 @@ const logShowConf = ref({
   show_loc_info: false,
   show_sec_info: false,
   reply_not_loc_pkg: false,
-  sync_sys_time_by_cpt7: true
+  sync_sys_time_by_cpt7: true,
+  proc_ins_pkg: false,
+  timeout_ms: 3
 });
 
 const refreshTime = async () => {
