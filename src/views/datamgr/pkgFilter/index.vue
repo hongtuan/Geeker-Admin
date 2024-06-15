@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>UDP包过滤转发态势</span>
+        <span>UDP包采集、转发、发送态势</span>
         <div>
           <el-space>
             <el-checkbox v-model="isAutoRefresh" @change="setAutoRefresh">
@@ -22,21 +22,31 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-table :data="logData2Table" style="width: 100%" border max-height="300">
+        <!-- <el-table ref="tableRef" :data="logData2Table" style="width: 100%" border max-height="300">
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
           <el-table-column prop="UP_FT_TIMES" label="采集次数"></el-table-column>
           <el-table-column prop="UP_INS_CT" label="INS采到包数"></el-table-column>
           <el-table-column prop="UP_INS_RP_CT" label="已转发"></el-table-column>
           <el-table-column prop="INS_LOST_PKG" label="转发堆积"></el-table-column>
-          <el-table-column prop="UP_INS_LOC_CT" label="需偏转发送"></el-table-column>
-          <el-table-column prop="UP_INS_SD_CT" label="已偏转发送"></el-table-column>
-          <el-table-column prop="INS_LOST_LOC_PKG" label="偏转堆积"></el-table-column>
+          <el-table-column prop="UP_INS_LOC_CT" label="需发送"></el-table-column>
+          <el-table-column prop="UP_INS_SD_CT" label="已发送"></el-table-column>
+          <el-table-column prop="INS_LOST_LOC_PKG" label="发送堆积"></el-table-column>
           <el-table-column prop="UP_CPT7_CT" label="CPT7采到包数"></el-table-column>
           <el-table-column prop="UP_CPT7_RP_CT" label="已转发"></el-table-column>
           <el-table-column prop="CPT7_LOST_PKG" label="转发堆积"></el-table-column>
-          <el-table-column prop="UP_CPT7_LOC_CT" label="需偏转发送"></el-table-column>
-          <el-table-column prop="UP_CPT7_SD_CT" label="已偏转发送"></el-table-column>
-          <el-table-column prop="CPT7_LOST_LOC_PKG" label="偏转堆积"></el-table-column>
+          <el-table-column prop="UP_CPT7_LOC_CT" label="需发送"></el-table-column>
+          <el-table-column prop="UP_CPT7_SD_CT" label="已发送"></el-table-column>
+          <el-table-column prop="CPT7_LOST_LOC_PKG" label="发送堆积"></el-table-column>
+        </el-table> -->
+        <el-table :data="logData2Table" style="width: 100%" border max-height="300">
+          <el-table-column
+            v-for="(column, index) in tableColumnConfig"
+            :key="index"
+            :prop="column.prop"
+            :label="column.label"
+            :width="index === 0 ? '170' : ''"
+          >
+          </el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -47,7 +57,26 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { ECOption } from "@/components/ECharts/config";
 import ECharts from "@/components/ECharts/index.vue";
 import { getUdpFilterTrend } from "@/api/modules/sysadmin";
+
+const tableColumnConfig = [
+  { prop: "LOG_TIME", label: "时间" },
+  { prop: "UP_FT_TIMES", label: "采集次数" },
+  { prop: "UP_INS_CT", label: "INS数据包" },
+  { prop: "UP_INS_RP_CT", label: "已转发" },
+  { prop: "INS_LOST_PKG", label: "转发堆积" },
+  { prop: "UP_INS_LOC_CT", label: "需发送" },
+  { prop: "UP_INS_SD_CT", label: "已发送" },
+  { prop: "INS_LOST_LOC_PKG", label: "发送堆积" },
+  { prop: "UP_CPT7_CT", label: "CPT7数据包" },
+  { prop: "UP_CPT7_RP_CT", label: "已转发 " },
+  { prop: "CPT7_LOST_PKG", label: "转发堆积 " },
+  { prop: "UP_CPT7_LOC_CT", label: "需发送 " },
+  { prop: "UP_CPT7_SD_CT", label: "已发送 " },
+  { prop: "CPT7_LOST_LOC_PKG", label: "发送堆积 " }
+];
+
 const isAutoRefresh = ref(false);
+
 const setAutoRefresh = () => {
   if (isAutoRefresh.value) {
     // 设置每隔10秒刷新一次。
@@ -62,7 +91,7 @@ const setAutoRefresh = () => {
 
 const option = ref<ECOption>({
   title: {
-    text: "UDP包过滤趋势图",
+    text: "UDP包处理数据",
     textStyle: {
       color: "#a1a1a1"
     }
@@ -131,9 +160,16 @@ const loadData = async () => {
     // 支撑折现图展示的列数据，从1开始
     let columnNames = logData["columnNames"].slice(1);
     // 更新option的数据
+    // 提取tableColumnConfig中的prop值，构建一个数组，然后使用数组从1开始的内容填充
+    // let cnColumnNames = tableColumnConfig.map(item => item.prop);
+    let excludeColumns = ["INS_LOST_PKG", "INS_LOST_LOC_PKG", "CPT7_LOST_PKG", "CPT7_LOST_LOC_PKG"];
+    let cnColumnNames = tableColumnConfig.filter(item => !excludeColumns.includes(item.prop)).map(item => item.label);
+    // console.log(cnColumnNames);
     let optionValue = option.value as any;
     if (optionValue.legend?.data) {
-      optionValue.legend.data = columnNames;
+      // optionValue.legend.data = columnNames;
+      // optionValue.legend.data = cnColumnNames.slice(1);
+      optionValue.legend.data = cnColumnNames;
     }
     if (optionValue.xAxis?.[0]) {
       optionValue.xAxis[0].data = logData["LOG_TIME"];
@@ -181,8 +217,11 @@ const loadData = async () => {
       for (let i = 1; i < columnData.length; i++) {
         pces.push(columnData[i] - columnData[i - 1]);
       }
+      // 从tableColumnConfig中根据columnName提取label值，用于填充serie的name属性
+      let cnColumnName = tableColumnConfig.find(item => item.prop === columnName);
       let serie = {
-        name: columnName,
+        // name: columnName,
+        name: cnColumnName?.label,
         type: "line",
         stack: "Total",
         areaStyle: {},

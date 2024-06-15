@@ -58,7 +58,7 @@ const setAutoRefresh = () => {
 
 const option = ref<ECOption>({
   title: {
-    text: "偏转任务处理",
+    text: "偏转任务数据",
     textStyle: {
       color: "#a1a1a1"
     }
