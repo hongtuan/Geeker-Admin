@@ -123,6 +123,10 @@ export const uploadAdminFile = (params: any) => {
 export const getUdpFilterTrend = () => {
   return http.get<any>(PORT1 + `/getudpfiltertrend`);
 };
+
+export const getUdpFilterTrendByPost = (params: any) => {
+  return http.post<any>(PORT1 + `/getudpfiltertrendpost`, params);
+};
 // 7.2 W2C proc
 export const getW2CProcTrend = () => {
   return http.get<any>(PORT1 + `/getw2cproctrend`);
