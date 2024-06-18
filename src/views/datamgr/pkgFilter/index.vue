@@ -199,6 +199,14 @@ let logData: { [key: string]: any };
 
 const fillData = () => {
   if (logData) {
+    // 通过后台数据更新
+    // let dateObj = dayjs(logData["LatestLogTime"]);
+    // endTimeStr.value = dateObj.format("YYYY-MM-DD HH:mm:ss");
+    let LatestLogTime = logData["LatestLogTime"];
+    // console.log(LatestLogTime);
+    let dateObj = dayjs(LatestLogTime);
+    endTimeStr.value = dateObj.format("YYYY-MM-DD HH:mm:ss");
+
     // 支撑折现图展示的列数据，从1开始
     let tableColumnNames = logData["columnNames"].slice(1);
     // console.log(tableColumnNames);
