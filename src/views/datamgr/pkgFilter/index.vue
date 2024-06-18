@@ -45,16 +45,27 @@
     </template>
     <el-row>
       <el-col>
-        <div class="card content-box" style="width: 100%; height: 400px">
+        <div class="card content-box" style="width: 100%; height: 360px">
           <ECharts :option="option" style="width: 100%; height: 100%" />
         </div>
       </el-col>
     </el-row>
-    <!-- <el-row>
+    <el-row>
       <el-col>
-        <el-space>总采集数据包数:{{ totalPkg }},理论采集包数：{{ rowCount * 200 }}</el-space>
+        <el-table :data="statData2Table" style="width: 100%" border max-height="300">
+          <el-table-column
+            v-for="(column, index) in statTbColConf"
+            :key="index"
+            :prop="column.prop"
+            :label="column.label"
+            :width="index === 0 ? '100' : ''"
+            :header-cell-style="{ backgroundColor: '#blue' }"
+            align="right"
+          >
+          </el-table-column>
+        </el-table>
       </el-col>
-    </el-row> -->
+    </el-row>
     <el-row>
       <el-col>
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
@@ -101,21 +112,32 @@ const cnColumnNames = tableColumnConfig
   .filter(item => !excludeColumns.includes(item.prop))
   .map(item => item.label)
   .slice(1);
-// console.log(cnColumnNames);
-// const tableColumnNames = tableColumnConfig.map(item => item.prop).slice(1);
-// console.log(tableColumnNames);
+
 const isAutoRefresh = ref(false);
-const endTimeStr = ref("2024-06-16 13:50:25");
-const rowCount = ref(60);
-const minOffset = ref(10);
-const totalPkg = ref(0);
-// let totalPkg = 0;
+const endTimeStr = ref("2024-06-18 17:45:09");
+const rowCount = ref<number>(60);
+const minOffset = ref<number>(10);
+
+const statTbColConf = [
+  { prop: "STAT_ROWS", label: "统计行数" },
+  { prop: "DATA_TYPE", label: "数据包类型" },
+  { prop: "INS_EXPT_CT", label: "预期接收总包数" },
+  { prop: "INS_RCV_CT", label: "实际收到总包数" },
+  { prop: "INS_LOST_RT", label: "接收丢包率" },
+  { prop: "INS_LOC_EXPT_CT", label: "预期接收、处理坐标数据包数" },
+  { prop: "INS_LOC_RCV_CT", label: "实际收到、处理坐标数据包数" },
+  { prop: "INS_LOC_LOST_RT", label: "坐标数据接收、处理丢包率" }
+];
+// 统计表数据
+let statData2Table = ref<{ [key: string]: any }[]>([]);
+
 const minSubstract = () => {
   // console.log(minOffset.value);
   let dateObj = dayjs(endTimeStr.value);
   dateObj = dateObj.subtract(minOffset.value, "minute");
   endTimeStr.value = dateObj.format("YYYY-MM-DD HH:mm:ss");
 };
+
 const minAdd = () => {
   //
   let dateObj = dayjs(endTimeStr.value);
@@ -192,21 +214,13 @@ const option = ref<ECOption>({
   series: []
 });
 
-let logData2Table = ref<{ [key: string]: any }[]>([]);
+const logData2Table = ref<{ [key: string]: any }[]>([]);
 // 自动刷新的计时器
 let intervalId: number | undefined;
 let logData: { [key: string]: any };
 
 const fillData = () => {
   if (logData) {
-    // 通过后台数据更新
-    // let dateObj = dayjs(logData["LatestLogTime"]);
-    // endTimeStr.value = dateObj.format("YYYY-MM-DD HH:mm:ss");
-    let LatestLogTime = logData["LatestLogTime"];
-    // console.log(LatestLogTime);
-    let dateObj = dayjs(LatestLogTime);
-    endTimeStr.value = dateObj.format("YYYY-MM-DD HH:mm:ss");
-
     // 支撑折现图展示的列数据，从1开始
     let tableColumnNames = logData["columnNames"].slice(1);
     // console.log(tableColumnNames);
@@ -318,8 +332,91 @@ const fillData = () => {
       // 填充行数据
       logData2Table.value.push(row);
     }
-    // 遍历logData2Table.value，累加其中的UP_FT_TIMES列的值，得到totalPkg
-    totalPkg.value = logData2Table.value.reduce((acc, cur) => acc + cur["UP_INS_CT"], 0);
+
+    console.log("rowCount.value:", rowCount.value);
+    if (logData2Table.value.length > 0) {
+      statData2Table.value = [];
+      const firstRow = logData2Table.value[0];
+      const lastRow = logData2Table.value[logData2Table.value.length - 1];
+      // 统计INS基础数据包
+      let insStatDataRow: { [key: string]: any } = {};
+      insStatDataRow["DATA_TYPE"] = "INS全量数据";
+      insStatDataRow["STAT_ROWS"] = rowCount;
+      insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
+      insStatDataRow["INS_RCV_CT"] = firstRow["UP_INS_CT"] - lastRow["UP_INS_CT"];
+      insStatDataRow["INS_LOST_RT"] = ((1 - insStatDataRow["INS_RCV_CT"] / insStatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
+      insStatDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);
+      insStatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_INS_LOC_CT"] - lastRow["UP_INS_LOC_CT"];
+      insStatDataRow["INS_LOC_LOST_RT"] =
+        ((1 - insStatDataRow["INS_LOC_RCV_CT"] / insStatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
+      statData2Table.value.push(insStatDataRow);
+
+      // 统计INS转发非坐标包
+      // let insNotLocDataRow: { [key: string]: any } = {};
+      // insNotLocDataRow["DATA_TYPE"] = "INS转发非坐标数据";
+      // insNotLocDataRow["STAT_ROWS"] = rowCount;
+      // insNotLocDataRow["INS_EXPT_CT"] = 200 * Number(rowCount);
+      // insNotLocDataRow["INS_RCV_CT"] = firstRow["UP_INS_RP_CT"] - lastRow["UP_INS_RP_CT"];
+      // insNotLocDataRow["INS_LOST_RT"] =
+      //   ((1 - insNotLocDataRow["INS_RCV_CT"] / insNotLocDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
+      // insNotLocDataRow["INS_LOC_EXPT_CT"] = 0;
+      // insNotLocDataRow["INS_LOC_RCV_CT"] = 0;
+      // insNotLocDataRow["INS_LOC_LOST_RT"] = "0.0%";
+      // statData2Table.value.push(insNotLocDataRow);
+
+      // 统计INS坐标数据包
+      // let insLocDataRow: { [key: string]: any } = {};
+      // insLocDataRow["DATA_TYPE"] = "INS坐标数据";
+      // insLocDataRow["STAT_ROWS"] = rowCount;
+      // insLocDataRow["INS_EXPT_CT"] = 10 * Number(rowCount);
+      // insLocDataRow["INS_RCV_CT"] = firstRow["UP_INS_LOC_CT"] - lastRow["UP_INS_LOC_CT"];
+      // insLocDataRow["INS_LOST_RT"] = ((1 - insLocDataRow["INS_RCV_CT"] / insLocDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
+      // insLocDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);
+      // insLocDataRow["INS_LOC_RCV_CT"] = firstRow["UP_INS_SD_CT"] - lastRow["UP_INS_SD_CT"];
+      // insLocDataRow["INS_LOC_LOST_RT"] =
+      //   ((1 - insLocDataRow["INS_LOC_RCV_CT"] / insLocDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
+      // statData2Table.value.push(insLocDataRow);
+
+      // 统计CPT7全量数据包
+      let cpt7StatDataRow: { [key: string]: any } = {};
+      cpt7StatDataRow["DATA_TYPE"] = "CPT7全量数据";
+      cpt7StatDataRow["STAT_ROWS"] = rowCount;
+      cpt7StatDataRow["INS_EXPT_CT"] = 100 * Number(rowCount);
+      cpt7StatDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_CT"] - lastRow["UP_CPT7_CT"];
+      cpt7StatDataRow["INS_LOST_RT"] =
+        ((1 - cpt7StatDataRow["INS_RCV_CT"] / cpt7StatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
+      cpt7StatDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
+      cpt7StatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"];
+      cpt7StatDataRow["INS_LOC_LOST_RT"] =
+        ((1 - cpt7StatDataRow["INS_LOC_RCV_CT"] / cpt7StatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
+      statData2Table.value.push(cpt7StatDataRow);
+
+      // 统计CPT7转发数据包
+      // let cpt7NotLocDataRow: { [key: string]: any } = {};
+      // cpt7NotLocDataRow["DATA_TYPE"] = "CPT7转发非坐标数据";
+      // cpt7NotLocDataRow["STAT_ROWS"] = rowCount;
+      // cpt7NotLocDataRow["INS_EXPT_CT"] = 0;
+      // cpt7NotLocDataRow["INS_RCV_CT"] = 0;
+      // cpt7NotLocDataRow["INS_LOST_RT"] = "0.0%";
+      // cpt7NotLocDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
+      // cpt7NotLocDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_RP_CT"] - lastRow["UP_CPT7_RP_CT"];
+      // cpt7NotLocDataRow["INS_LOC_LOST_RT"] =
+      //   ((1 - cpt7NotLocDataRow["INS_LOC_RCV_CT"] / cpt7NotLocDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
+      // statData2Table.value.push(cpt7NotLocDataRow);
+
+      // 统计CPT7坐标数据包
+      // let cpt7LocDataRow: { [key: string]: any } = {};
+      // cpt7LocDataRow["DATA_TYPE"] = "CPT7坐标数据";
+      // cpt7LocDataRow["STAT_ROWS"] = rowCount;
+      // cpt7LocDataRow["INS_EXPT_CT"] = 100 * Number(rowCount);
+      // cpt7LocDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"];
+      // cpt7LocDataRow["INS_LOST_RT"] = ((1 - cpt7LocDataRow["INS_RCV_CT"] / cpt7LocDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
+      // cpt7LocDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
+      // cpt7LocDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_SD_CT"] - lastRow["UP_CPT7_SD_CT"];
+      // cpt7LocDataRow["INS_LOC_LOST_RT"] =
+      //   ((1 - cpt7LocDataRow["INS_LOC_RCV_CT"] / cpt7LocDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
+      // statData2Table.value.push(cpt7LocDataRow);
+    }
   }
 };
 
@@ -338,6 +435,11 @@ const queryData = async () => {
   const { data } = await getUdpFilterTrendByPost(params);
   logData = data;
   fillData();
+  // 通过后台数据更新截止时间串
+  let LatestLogTime = logData["LatestLogTime"];
+  // console.log(LatestLogTime);
+  let dateObj = dayjs(LatestLogTime);
+  endTimeStr.value = dateObj.format("YYYY-MM-DD HH:mm:ss");
 };
 // 页面加载完毕后调用这个方法
 onMounted(() => {
