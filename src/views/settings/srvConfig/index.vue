@@ -10,69 +10,81 @@
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
-              <span>服务器基本配置</span>
+              <el-space>
+                <span>服务器基本配置</span>
+              </el-space>
+              <el-space>
+                <el-button @click="restartGw">重启网关服务</el-button>
+              </el-space>
             </div>
           </template>
           <div style="width: 100%; height: 210px; overflow: auto">
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" style="text-align: right"><span>服务器时间：</span></el-col>
-              <el-col :span="8" style="min-height: 36px">
+              <el-col :span="14" style="min-height: 36px">
                 <el-input type="input" v-model="sysTime" style="width: 240px"></el-input>
               </el-col>
-              <el-col :span="9" style="min-height: 36px">
+              <el-col :span="5" style="min-height: 36px">
                 <el-button @click="refreshTime">刷新</el-button>
                 <el-button @click="saveTime">保存</el-button>
               </el-col>
             </el-row>
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" style="text-align: right"><span>以太网Mac地址：</span></el-col>
-              <el-col :span="8"><el-input type="input" v-model="ethMac" style="width: 240px"></el-input></el-col>
-              <el-col :span="9">
+              <el-col :span="14"><el-input type="input" v-model="ethMac" style="width: 240px"></el-input></el-col>
+              <el-col :span="5">
                 <el-button @click="refreshEthMac">刷新</el-button>
                 <el-button @click="saveEthMac">保存</el-button>
               </el-col>
             </el-row>
 
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
-              <el-col :span="5" style="text-align: right"><span>日志及服务配置：</span></el-col>
-              <el-col :span="8">
-                <el-checkbox v-model="logShowConf.show_filter_pkg">
-                  <span>UDP包过滤</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.show_loc_info">
-                  <span>坐标数据</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.show_pkg_info">
-                  <span>UDP包摘要</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.show_sec_info">
-                  <span>偏转任务</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
-                  <span>转发非坐标报文</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
-                  <span>使用CPT7同步系统时间</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.proc_ins_pkg">
-                  <span>处理INS报文</span>
-                </el-checkbox>
-                <div style="display: flex; align-items: center">
-                  <span>抓包间隔(ms):</span>
+              <el-col :span="5" style="text-align: right"><span>服务及日志配置：</span></el-col>
+              <el-col :span="14">
+                <el-space>
+                  <el-checkbox v-model="logShowConf.proc_ins_pkg">
+                    <span>处理INS报文</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
+                    <span>转发所有INS报文</span>
+                  </el-checkbox>
+                </el-space>
+                <el-space>
+                  <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
+                    <span>同步CPT7时间</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.sync_sys_time_by_ins">
+                    <span>同步INS时间</span>
+                  </el-checkbox>
+                  <span>采集等待:</span>
                   <el-input-number
                     v-model="logShowConf.timeout_ms"
                     controls-position="right"
                     :min="0"
-                    :max="1000"
-                    :step="1"
-                    style="width: 6em"
+                    :max="990"
+                    :step="10"
+                    style="width: 5em"
                   ></el-input-number>
-                </div>
+                  <span>ms</span>
+                </el-space>
+                <el-space>
+                  <el-checkbox v-model="logShowConf.show_filter_pkg">
+                    <span>UDP包过滤</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.show_loc_info">
+                    <span>坐标数据</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.show_pkg_info">
+                    <span>UDP包摘要</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.show_sec_info">
+                    <span>偏转任务</span>
+                  </el-checkbox>
+                </el-space>
               </el-col>
-              <el-col :span="9">
+              <el-col :span="5">
                 <el-button @click="loadLogShowConf">刷新</el-button>
                 <el-button @click="saveLogShowConf">保存</el-button>
-                <el-button @click="restartGw">重启网关服务</el-button>
               </el-col>
             </el-row>
           </div>
@@ -208,6 +220,7 @@ const logShowConf = ref({
   show_sec_info: false,
   reply_not_loc_pkg: false,
   sync_sys_time_by_cpt7: true,
+  sync_sys_time_by_ins: false,
   proc_ins_pkg: false,
   timeout_ms: 3
 });

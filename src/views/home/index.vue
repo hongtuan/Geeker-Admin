@@ -101,12 +101,5 @@ onMounted(() => loadData());
 </script>
 
 <style scoped lang="scss">
-.box-card {
-  width: 100%;
-  height: 100%;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-}
+@import "./index.scss";
 </style>
