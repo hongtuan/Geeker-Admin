@@ -114,7 +114,10 @@ const cnColumnNames = tableColumnConfig
   .slice(1);
 
 const isAutoRefresh = ref(false);
-const endTimeStr = ref("2024-06-18 17:45:09");
+// const endTimeStr = ref("2024-06-18 17:45:09");
+// 使用系统当前时间作为默认值
+let crtSysTimeStr = dayjs().format("YYYY-MM-DD HH:mm:ss");
+const endTimeStr = ref(crtSysTimeStr);
 const rowCount = ref<number>(60);
 const minOffset = ref<number>(10);
 
