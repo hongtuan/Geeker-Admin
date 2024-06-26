@@ -119,7 +119,78 @@
         }
       ]
     },
-
+    {
+      "path": "/seAppMgr",
+      "name": "seAppMgr",
+      "redirect": "/seAppMgr/seTest",
+      "meta": {
+        "icon": "MessageBox",
+        "title": "偏转服务配置",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/seAppMgr/seReg",
+          "name": "seReg",
+          "component": "/seAppMgr/seReg/index",
+          "meta": {
+            "icon": "TrendCharts",
+            "title": "偏转芯片配置",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/seAppMgr/appReg",
+          "name": "appReg",
+          "component": "/seAppMgr/appReg/index",
+          "meta": {
+            "icon": "TrendCharts",
+            "title": "偏转应用配置",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/seAppMgr/seTest",
+          "name": "seTest",
+          "component": "/seAppMgr/seTest/index",
+          "meta": {
+            "icon": "Tickets",
+            "title": "偏转服务测试",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/seAppMgr/srvAudit",
+          "name": "srvAudit",
+          "component": "/seAppMgr/srvAudit/index",
+          "meta": {
+            "icon": "Tickets",
+            "title": "偏转服务审计",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    },
     {
       "path": "/about/index",
       "name": "about",
