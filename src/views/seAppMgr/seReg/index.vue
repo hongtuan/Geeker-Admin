@@ -59,12 +59,12 @@ import { reactive } from "vue";
 const formData = reactive({
   seType: "XT-M580",
   seSN: "",
-  rmid: "",
+  rmid: "XTSE567812345678",
   gwDevSN: "gw001",
   vehType: "红旗Exxx",
   vecVin: "xxx-yyy",
   mspSN: "SW-2024",
-  dKey: "dkey004006-004",
+  dKey: "1234567887654321",
   trcal: ""
 });
 
