@@ -72,7 +72,10 @@ const rules = {
   vehType: [{ required: true, message: "请输入车辆型号", trigger: "blur" }],
   vehVin: [{ required: true, message: "请输入车辆标识(VIN)", trigger: "blur" }],
   mspID: [{ required: true, message: "请输入图商标识", trigger: "blur" }],
-  dKey: [{ required: true, message: "请输入数据密钥", trigger: "blur" }],
+  dKey: [
+    { required: true, message: "请输入数据密钥", trigger: "blur" },
+    { pattern: /^\d{16}$/, message: "数据密钥必须是16位数字", trigger: "blur" }
+  ],
   trcal: [{ required: true, message: "信任根证PEM编码", trigger: "blur" }]
 };
 
