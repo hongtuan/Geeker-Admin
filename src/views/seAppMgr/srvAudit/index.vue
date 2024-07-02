@@ -3,42 +3,45 @@
     <template #header>
       <div class="card-header">
         <span>偏转服务审计</span>
+        <div>
+          <el-space>
+            <el-button @click="loadData">刷新</el-button>
+          </el-space>
+        </div>
       </div>
     </template>
     <el-row>
       <el-col>
-        <!-- <el-input type="textarea" :value="logData" :rows="32" :readonly="true"></el-input> -->
-        <!-- <el-input type="textarea" ref="logInput" :value="logData" :rows="32" :readonly="true"></el-input> -->
-        <!-- <el-input type="textarea" ref="logInput" v-model="logData" :rows="32"></el-input> -->
+        <el-table :data="logData2Table" style="width: 100%" border max-height="320">
+          <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
+          <el-table-column prop="W2C_ACCUM_TOTAL_CT" label="累计请求次数"></el-table-column>
+          <el-table-column prop="W2C_ACCUM_SUCCESS_CT" label="成功次数"></el-table-column>
+          <el-table-column prop="W2C_ACCUM_FAILED_CT" label="失败次数"></el-table-column>
+        </el-table>
       </el-col>
     </el-row>
   </el-card>
 </template>
 
 <script setup lang="ts" name="srvAudit">
-// import { ref, onMounted } from "vue";
-// import { ref, onMounted } from "vue";
-// import { ElInput } from "element-plus";
-// import dayjs from "dayjs";
-// import { confirmAction } from "@/api/modules/utilfuns";
+import { ref, onMounted } from "vue";
+import dayjs from "dayjs";
+import { srvAuditSrv } from "@/api/modules/seappmgr";
+let logData2Table = ref<{ [key: string]: any }[]>([]);
 
-// const loadData = async () => {
-//   // 请求后端服务加载数据
-//   // const { data } = await getLogContent();
-//   // // console.log(JSON.stringify(data, null, 2));
-//   // logData.value = data.logData;
-//   // logRowCount.value = data.logRowCount;
-//   // // console.log(logData.value);
-//   // // 确保 DOM 更新后再滚动到底部
-//   // await nextTick();
-//   // if (logInput.value) {
-//   //   logInput.value.$el.dispatchEvent(new Event("input"));
-//   //   logInput.value.$el.scrollTop = logInput.value.$el.scrollHeight;
-//   // }
-// };
+const loadData = async () => {
+  const timestamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
+  let param = { endTimeStr: timestamp, rowCount: 60 };
+  // 请求后端服务加载数据
+  const { data } = await srvAuditSrv(param);
+  console.log(JSON.stringify(data, null, 2));
+  logData2Table.value = data.rowData;
+};
 
-// 页面加载完毕后调用这个方法
-// onMounted(() => loadData());
+onMounted(() => {
+  // 页面加载完毕后调用这个方法
+  loadData();
+});
 </script>
 
 <style scoped lang="scss">
