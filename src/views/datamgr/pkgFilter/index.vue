@@ -347,9 +347,17 @@ const fillData = () => {
       insStatDataRow["STAT_ROWS"] = rowCount;
       insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
       insStatDataRow["INS_RCV_CT"] = firstRow["UP_INS_CT"] - lastRow["UP_INS_CT"];
+      // 统计实际接收到的INS数据包数，在有数据进入的情况下，需要增加210，消除区间首位相减算法的影响
+      if (insStatDataRow["INS_RCV_CT"] > 0) {
+        insStatDataRow["INS_RCV_CT"] += 210;
+      }
       insStatDataRow["INS_LOST_RT"] = ((1 - insStatDataRow["INS_RCV_CT"] / insStatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
       insStatDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);
       insStatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_INS_LOC_CT"] - lastRow["UP_INS_LOC_CT"];
+      // 统计实际接收到的INS坐标数据包数，在有数据进入的情况下，需要增加10，消除区间首位相减算法的影响
+      if (insStatDataRow["INS_LOC_RCV_CT"] > 0) {
+        insStatDataRow["INS_LOC_RCV_CT"] += 10;
+      }
       insStatDataRow["INS_LOC_LOST_RT"] =
         ((1 - insStatDataRow["INS_LOC_RCV_CT"] / insStatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
       statData2Table.value.push(insStatDataRow);
@@ -385,13 +393,19 @@ const fillData = () => {
       cpt7StatDataRow["DATA_TYPE"] = "CPT7全量数据";
       cpt7StatDataRow["STAT_ROWS"] = rowCount;
       cpt7StatDataRow["INS_EXPT_CT"] = 100 * Number(rowCount);
-      // 统计实际接收到的CPT7数据包数，需要增加100，消除N-1项的影响
-      cpt7StatDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_CT"] - lastRow["UP_CPT7_CT"] + 100;
+      cpt7StatDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_CT"] - lastRow["UP_CPT7_CT"];
+      // 统计实际接收到的CPT7数据包数，在有数据进入的情况下，需要增加100，消除区间首位相减算法的影响
+      if (cpt7StatDataRow["INS_RCV_CT"] > 0) {
+        cpt7StatDataRow["INS_RCV_CT"] += 100;
+      }
       cpt7StatDataRow["INS_LOST_RT"] =
         ((1 - cpt7StatDataRow["INS_RCV_CT"] / cpt7StatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
       cpt7StatDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
-      // 统计实际接收到的CPT7坐标数据包数，需要增加100，消除N-1项的影响
-      cpt7StatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"] + 100;
+      cpt7StatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"];
+      // 统计实际接收到的CPT7坐标数据包数，在有数据进入的情况下，需要增加100，消除区间首位相减算法的影响
+      if (cpt7StatDataRow["INS_LOC_RCV_CT"] > 0) {
+        cpt7StatDataRow["INS_LOC_RCV_CT"] += 100;
+      }
       cpt7StatDataRow["INS_LOC_LOST_RT"] =
         ((1 - cpt7StatDataRow["INS_LOC_RCV_CT"] / cpt7StatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
       statData2Table.value.push(cpt7StatDataRow);
