@@ -385,11 +385,13 @@ const fillData = () => {
       cpt7StatDataRow["DATA_TYPE"] = "CPT7全量数据";
       cpt7StatDataRow["STAT_ROWS"] = rowCount;
       cpt7StatDataRow["INS_EXPT_CT"] = 100 * Number(rowCount);
-      cpt7StatDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_CT"] - lastRow["UP_CPT7_CT"];
+      // 统计实际接收到的CPT7数据包数，需要增加100，消除N-1项的影响
+      cpt7StatDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_CT"] - lastRow["UP_CPT7_CT"] + 100;
       cpt7StatDataRow["INS_LOST_RT"] =
         ((1 - cpt7StatDataRow["INS_RCV_CT"] / cpt7StatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
       cpt7StatDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
-      cpt7StatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"];
+      // 统计实际接收到的CPT7坐标数据包数，需要增加100，消除N-1项的影响
+      cpt7StatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"] + 100;
       cpt7StatDataRow["INS_LOC_LOST_RT"] =
         ((1 - cpt7StatDataRow["INS_LOC_RCV_CT"] / cpt7StatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
       statData2Table.value.push(cpt7StatDataRow);
