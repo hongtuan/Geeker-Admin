@@ -20,8 +20,9 @@
         <el-table :data="logData2Table" style="width: 100%" border max-height="320">
           <el-table-column type="index" label="行号" width="80"></el-table-column>
           <el-table-column prop="EVT_TIME" label="事件时间" width="180"></el-table-column>
-          <el-table-column prop="EVT_NAME" label="服务事件说明" width="240"></el-table-column>
+          <el-table-column prop="EVT_NAME" label="服务事件说明" width="200"></el-table-column>
           <el-table-column prop="EVT_CONTENT" label="服务事件详情"></el-table-column>
+          <el-table-column prop="SYNC_OK" label="已同步云端" width="120"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -80,7 +81,7 @@ let intervalId: number | undefined;
 const loadData = async () => {
   // 请求后端服务加载数据
   const { data } = await getLastEvtLog();
-  // console.log(JSON.stringify(data, null, 2));
+  console.log(JSON.stringify(data, null, 2));
   logData2Table.value = data.rowData;
   tableInfo.value = data.tableInfo.rowData;
   capStartTime.value = data.capStartTime;
