@@ -12,11 +12,14 @@
     </template>
     <el-row>
       <el-col>
-        <el-table :data="logData2Table" style="width: 100%" border max-height="320">
+        <el-table :data="logData2Table" style="width: 100%" border max-height="640">
+          <el-table-column type="index" label="行号" width="80"></el-table-column>
+          <el-table-column prop="ID" label="主键" width="80"></el-table-column>
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
           <el-table-column prop="W2C_ACCUM_TOTAL_CT" label="累计请求次数"></el-table-column>
           <el-table-column prop="W2C_ACCUM_SUCCESS_CT" label="成功次数"></el-table-column>
           <el-table-column prop="W2C_ACCUM_FAILED_CT" label="失败次数"></el-table-column>
+          <el-table-column prop="SYNC_OK" label="已同步云端"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -34,7 +37,7 @@ const loadData = async () => {
   let param = { endTimeStr: timestamp, rowCount: 60 };
   // 请求后端服务加载数据
   const { data } = await srvAuditSrv(param);
-  console.log(JSON.stringify(data, null, 2));
+  // console.log(JSON.stringify(data, null, 2));
   logData2Table.value = data.rowData;
 };
 

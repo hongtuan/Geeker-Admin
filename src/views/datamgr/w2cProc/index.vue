@@ -23,6 +23,7 @@
     <el-row>
       <el-col>
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
+          <el-table-column type="index" label="行号" width="80"></el-table-column>
           <el-table-column prop="LOG_TIME" label="时间" width="180"></el-table-column>
           <el-table-column prop="W2C_CT" label="需偏转包数"></el-table-column>
           <el-table-column prop="W2CED_CT" label="已偏转"></el-table-column>

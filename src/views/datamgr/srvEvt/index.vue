@@ -18,6 +18,7 @@
     <el-row>
       <el-col>
         <el-table :data="logData2Table" style="width: 100%" border max-height="320">
+          <el-table-column type="index" label="行号" width="80"></el-table-column>
           <el-table-column prop="EVT_TIME" label="事件时间" width="180"></el-table-column>
           <el-table-column prop="EVT_NAME" label="服务事件说明" width="240"></el-table-column>
           <el-table-column prop="EVT_CONTENT" label="服务事件详情"></el-table-column>
@@ -40,6 +41,7 @@
     <el-row>
       <el-col>
         <el-table :data="tableInfo" style="width: 100%" border max-height="80">
+          <el-table-column type="index" label="行号" width="80"></el-table-column>
           <el-table-column prop="GW_EVENT_COUNT" label="事件记录数" width="180"></el-table-column>
           <el-table-column prop="UP_FT_RP_LOG_COUNT" label="包处理记录数"></el-table-column>
           <el-table-column prop="W2C_PROC_LOG_COUNT" label="偏转任务记录数"></el-table-column>

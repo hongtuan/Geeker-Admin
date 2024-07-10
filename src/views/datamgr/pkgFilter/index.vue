@@ -69,13 +69,13 @@
     <el-row>
       <el-col>
         <el-table :data="logData2Table" style="width: 100%" border max-height="300">
+          <el-table-column type="index" label="行号" width="80"></el-table-column>
           <el-table-column
             v-for="(column, index) in tableColumnConfig"
             :key="index"
             :prop="column.prop"
             :label="column.label"
             :width="index === 0 ? '170' : ''"
-            :header-cell-style="{ backgroundColor: '#f2f2f2' }"
           >
           </el-table-column>
         </el-table>
