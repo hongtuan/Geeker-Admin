@@ -42,11 +42,14 @@
               <el-col :span="5" style="text-align: right"><span>服务及日志配置：</span></el-col>
               <el-col :span="14">
                 <el-space>
+                  <el-checkbox v-model="logShowConf.reply_original_pkg">
+                    <span>转发原始位置报文</span>
+                  </el-checkbox>
                   <el-checkbox v-model="logShowConf.proc_ins_pkg">
                     <span>处理INS报文</span>
                   </el-checkbox>
                   <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
-                    <span>转发所有INS报文</span>
+                    <span>转发INS非位置报文</span>
                   </el-checkbox>
                 </el-space>
                 <el-space>
@@ -218,6 +221,7 @@ const logShowConf = ref({
   show_pkg_info: false,
   show_loc_info: false,
   show_sec_info: false,
+  reply_original_pkg: false,
   reply_not_loc_pkg: false,
   sync_sys_time_by_cpt7: true,
   sync_sys_time_by_ins: false,
