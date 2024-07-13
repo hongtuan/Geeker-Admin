@@ -4,20 +4,20 @@
       <div class="card-header">
         <span>网关运行日志</span>
         <div>
+          <el-button @click="goToBegin">到行首</el-button>
           <el-button @click="loadData"> 刷新日志(最新{{ logRowCount }}行) </el-button>
           <!-- <el-button @click="triggerFileDownload">下载</el-button> -->
           <el-button @click="triggerFileGzDownload">下载日志</el-button>
           <el-button @click="clearLog">清理日志</el-button>
           <el-button @click="restartGw">重启网关服务</el-button>
           <el-button @click="stopGw">停止网关服务</el-button>
+          <el-button @click="goToEnd">到行尾</el-button>
         </div>
       </div>
     </template>
     <el-row>
       <el-col>
-        <!-- <el-input type="textarea" :value="logData" :rows="32" :readonly="true"></el-input> -->
         <el-input type="textarea" ref="logInput" :value="logData" :rows="32" :readonly="true"></el-input>
-        <!-- <el-input type="textarea" ref="logInput" v-model="logData" :rows="32"></el-input> -->
       </el-col>
     </el-row>
   </el-card>
@@ -34,19 +34,6 @@ import { confirmAction } from "@/api/modules/utilfuns";
 const logData = ref({});
 const logRowCount = ref(500);
 const logInput: Ref<InstanceType<typeof ElInput> | null> = ref(null);
-// const loadData = async () => {
-//   // 请求后端服务加载数据
-//   const { data } = await getLogContent();
-//   // console.log(JSON.stringify(data, null, 2));
-//   logData.value = data.logData;
-//   logRowCount.value = data.logRowCount;
-//   // console.log(logData.value);
-//   // 确保 DOM 更新后再滚动到底部
-//   await nextTick();
-//   if (logInput.value) {
-//     logInput.value.$el.scrollTop = logInput.value.$el.scrollHeight;
-//   }
-// };
 const loadData = async () => {
   // 请求后端服务加载数据
   const { data } = await getLogContent();
@@ -55,11 +42,7 @@ const loadData = async () => {
   logRowCount.value = data.logRowCount;
   // console.log(logData.value);
   // 确保 DOM 更新后再滚动到底部
-  await nextTick();
-  if (logInput.value) {
-    logInput.value.$el.dispatchEvent(new Event("input"));
-    logInput.value.$el.scrollTop = logInput.value.$el.scrollHeight;
-  }
+  goToEnd();
 };
 
 const clearLog = async () => {
@@ -96,6 +79,24 @@ const stopGw = async () => {
   confirmAction("你确认要停止网关服务吗？", stopGwSrv, "网关服务已停止。");
 };
 
+const goToBegin = async () => {
+  await nextTick();
+  if (logInput.value) {
+    const firstChild = logInput.value.$el.firstElementChild;
+    if (firstChild) {
+      firstChild.scrollTop = 0;
+    }
+  }
+};
+const goToEnd = async () => {
+  await nextTick();
+  if (logInput.value) {
+    const firstChild = logInput.value.$el.firstElementChild;
+    if (firstChild) {
+      firstChild.scrollTop = firstChild.scrollHeight;
+    }
+  }
+};
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
 </script>
