@@ -16,7 +16,7 @@
               <span>服务器基本配置</span>
             </div>
           </template>
-          <div style="width: 100%; height: 210px; overflow: auto">
+          <div style="width: 100%; height: 170px; overflow: auto">
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" class="text-right"><span>服务器时间：</span></el-col>
               <el-col :span="14" style="min-height: 36px">
@@ -57,10 +57,10 @@
               <span>服务器以太网设置(保存后需要重启设备方可生效)</span>
             </div>
           </template>
-          <div style="width: 100%; height: 210px; overflow: auto">
+          <div style="width: 100%; height: 170px; overflow: auto">
             <el-row type="flex" align="middle">
               <el-col :span="24">
-                <el-input type="textarea" v-model="ethConf" :rows="6"></el-input>
+                <el-input type="textarea" v-model="ethConf" :rows="4"></el-input>
               </el-col>
             </el-row>
             <el-row type="flex" align="middle">
@@ -83,7 +83,7 @@
               <span>采集服务及日志配置(保存后重启网关服务方可生效)</span>
             </div>
           </template>
-          <div style="width: 100%; height: 270px; overflow: auto">
+          <div style="width: 100%; height: 290px; overflow: auto">
             <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" class="text-right">采集数据配置：</el-col>
               <el-col :span="19">
@@ -101,9 +101,6 @@
                       style="width: 6em"
                     ></el-input-number>
                     <span class="stdfs">毫秒</span>
-                    <el-checkbox v-model="logShowConf.promisc_mode">
-                      <span class="stdfs">混杂模式</span>
-                    </el-checkbox>
                   </el-space>
                 </div>
                 <div>
@@ -132,8 +129,11 @@
                 </div>
                 <div>
                   <el-space>
-                    <span>采集过滤条件:</span>
-                    <el-input type="input" v-model="logShowConf.filter_info" style="width: 420px"></el-input>
+                    <span class="stdfs">采集过滤条件:</span>
+                    <el-input type="input" v-model="logShowConf.filter_info" style="width: 240px"></el-input>
+                    <el-checkbox v-model="logShowConf.promisc_mode">
+                      <span class="stdfs">混杂模式</span>
+                    </el-checkbox>
                   </el-space>
                 </div>
               </el-col>
@@ -150,12 +150,39 @@
                     <span class="stdfs">转发INS非位置报文</span>
                   </el-checkbox>
                 </el-space>
+                <div>
+                  <el-space>
+                    <span class="stdfs">审计数据上报间隔:</span>
+                    <el-input-number
+                      v-model="logShowConf.adata_time_interval"
+                      controls-position="right"
+                      :min="1"
+                      :max="120"
+                      :step="1"
+                      style="width: 5em"
+                    ></el-input-number>
+                    <span class="stdfs">分钟</span>
+                  </el-space>
+                  <el-space>
+                    <span class="stdfs">审计事件上报间隔:</span>
+                    <el-input-number
+                      v-model="logShowConf.aevt_time_interval"
+                      controls-position="right"
+                      :min="5"
+                      :max="180"
+                      :step="10"
+                      style="width: 5em"
+                    ></el-input-number>
+                    <span class="stdfs">分钟</span>
+                  </el-space>
+                </div>
                 <el-space>
+                  <span class="stdfs">系统时间源:</span>
                   <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
-                    <span class="stdfs">同步CPT7时间</span>
+                    <span class="stdfs">CPT7</span>
                   </el-checkbox>
                   <el-checkbox v-model="logShowConf.sync_sys_time_by_ins">
-                    <span class="stdfs">同步INS时间</span>
+                    <span class="stdfs">INS</span>
                   </el-checkbox>
                 </el-space>
               </el-col>
@@ -193,13 +220,13 @@
               <span>数据处理配置(保存后重启网关服务方可生效)</span>
             </div>
           </template>
-          <div style="width: 100%; height: 270px; overflow: auto">
+          <div style="width: 100%; height: 290px; overflow: auto">
             <el-tabs type="card" v-model="activeTab">
               <el-tab-pane label="CPT7数据处理配置" name="cpt7">
                 <!-- CPT7配置内容 -->
                 <el-row type="flex" align="middle">
                   <el-col :span="24">
-                    <el-input type="textarea" v-model="cpt7Conf" :rows="6"></el-input>
+                    <el-input type="textarea" v-model="cpt7Conf" :rows="7"></el-input>
                   </el-col>
                 </el-row>
                 <el-row type="flex" align="middle">
@@ -279,6 +306,8 @@ const logShowConf = ref({
   promisc_mode: false,
   ins_cap_port: 30018,
   cpt7_cap_port: 7003,
+  adata_time_interval: 5,
+  aevt_time_interval: 10,
   filter_info: "udp",
   cap_device: "eth0",
   timeout_ms: 3
