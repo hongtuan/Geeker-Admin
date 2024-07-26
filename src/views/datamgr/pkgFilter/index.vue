@@ -345,11 +345,13 @@ const fillData = () => {
       let insStatDataRow: { [key: string]: any } = {};
       insStatDataRow["DATA_TYPE"] = "INS全量数据";
       insStatDataRow["STAT_ROWS"] = rowCount;
-      insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
+      // insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
+      insStatDataRow["INS_EXPT_CT"] = 10 * Number(rowCount);
       insStatDataRow["INS_RCV_CT"] = firstRow["UP_INS_CT"] - lastRow["UP_INS_CT"];
       // 统计实际接收到的INS数据包数，在有数据进入的情况下，需要增加210，消除区间首位相减算法的影响
       if (insStatDataRow["INS_RCV_CT"] > 0) {
-        insStatDataRow["INS_RCV_CT"] += 210;
+        // insStatDataRow["INS_RCV_CT"] += 210;
+        insStatDataRow["INS_RCV_CT"] += 10;
       }
       insStatDataRow["INS_LOST_RT"] = ((1 - insStatDataRow["INS_RCV_CT"] / insStatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
       insStatDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);

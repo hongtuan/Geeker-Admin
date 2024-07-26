@@ -17,7 +17,7 @@
     </template>
     <el-row>
       <el-col>
-        <el-input type="textarea" ref="logInput" :value="logData" :rows="32" :readonly="true"></el-input>
+        <el-input type="textarea" ref="logInput" :value="logData" :rows="30" :readonly="true"></el-input>
       </el-col>
     </el-row>
   </el-card>

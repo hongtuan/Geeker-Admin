@@ -83,105 +83,107 @@
               <span>采集服务及日志配置(保存后重启网关服务方可生效)</span>
             </div>
           </template>
-          <el-row type="flex" align="middle" style="margin-bottom: 10px">
-            <el-col :span="5" class="text-right">采集数据配置：</el-col>
-            <el-col :span="19">
-              <div>
+          <div style="width: 100%; height: 270px; overflow: auto">
+            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+              <el-col :span="5" class="text-right">采集数据配置：</el-col>
+              <el-col :span="19">
+                <div>
+                  <el-space>
+                    <span>采集网卡:</span>
+                    <el-input type="input" v-model="logShowConf.cap_device" style="width: 70px"></el-input>
+                    <span>采集等待:</span>
+                    <el-input-number
+                      v-model="logShowConf.timeout_ms"
+                      controls-position="right"
+                      :min="0"
+                      :max="2000"
+                      :step="100"
+                      style="width: 6em"
+                    ></el-input-number>
+                    <span class="stdfs">毫秒</span>
+                    <el-checkbox v-model="logShowConf.promisc_mode">
+                      <span class="stdfs">混杂模式</span>
+                    </el-checkbox>
+                  </el-space>
+                </div>
+                <div>
+                  <el-space>
+                    <span class="stdfs">INS采集端口:</span>
+                    <el-input-number
+                      v-model="logShowConf.ins_cap_port"
+                      controls-position="right"
+                      :min="1025"
+                      :max="65534"
+                      :step="100"
+                      style="width: 7em"
+                    ></el-input-number>
+                  </el-space>
+                  <el-space>
+                    <span class="stdfs">CPT7采集端口:</span>
+                    <el-input-number
+                      v-model="logShowConf.cpt7_cap_port"
+                      controls-position="right"
+                      :min="1025"
+                      :max="65534"
+                      :step="100"
+                      style="width: 7em"
+                    ></el-input-number>
+                  </el-space>
+                </div>
+                <div>
+                  <el-space>
+                    <span>采集过滤条件:</span>
+                    <el-input type="input" v-model="logShowConf.filter_info" style="width: 420px"></el-input>
+                  </el-space>
+                </div>
+              </el-col>
+              <el-col :span="5" class="text-right">系统服务配置：</el-col>
+              <el-col :span="19">
                 <el-space>
-                  <span>采集网卡:</span>
-                  <el-input type="input" v-model="logShowConf.cap_device" style="width: 70px"></el-input>
-                  <span>采集等待:</span>
-                  <el-input-number
-                    v-model="logShowConf.timeout_ms"
-                    controls-position="right"
-                    :min="0"
-                    :max="2000"
-                    :step="100"
-                    style="width: 6em"
-                  ></el-input-number>
-                  <span class="stdfs">毫秒</span>
-                  <el-checkbox v-model="logShowConf.promisc_mode">
-                    <span class="stdfs">混杂模式</span>
+                  <el-checkbox v-model="logShowConf.reply_original_pkg">
+                    <span class="stdfs">转发原始位置报文</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.proc_ins_pkg">
+                    <span class="stdfs">处理INS报文</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
+                    <span class="stdfs">转发INS非位置报文</span>
                   </el-checkbox>
                 </el-space>
-              </div>
-              <div>
                 <el-space>
-                  <span class="stdfs">INS采集端口:</span>
-                  <el-input-number
-                    v-model="logShowConf.ins_cap_port"
-                    controls-position="right"
-                    :min="1025"
-                    :max="65534"
-                    :step="100"
-                    style="width: 7em"
-                  ></el-input-number>
+                  <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
+                    <span class="stdfs">同步CPT7时间</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.sync_sys_time_by_ins">
+                    <span class="stdfs">同步INS时间</span>
+                  </el-checkbox>
                 </el-space>
+              </el-col>
+              <el-col :span="5" class="text-right">日志输出配置：</el-col>
+              <el-col :span="19">
                 <el-space>
-                  <span class="stdfs">CPT7采集端口:</span>
-                  <el-input-number
-                    v-model="logShowConf.cpt7_cap_port"
-                    controls-position="right"
-                    :min="1025"
-                    :max="65534"
-                    :step="100"
-                    style="width: 7em"
-                  ></el-input-number>
+                  <el-checkbox v-model="logShowConf.show_filter_pkg">
+                    <span class="stdfs">UDP包过滤</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.show_loc_info">
+                    <span class="stdfs">坐标数据</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.show_pkg_info">
+                    <span class="stdfs">UDP包摘要</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.show_sec_info">
+                    <span class="stdfs">偏转任务</span>
+                  </el-checkbox>
                 </el-space>
-              </div>
-              <div>
-                <el-space>
-                  <span>采集过滤条件:</span>
-                  <el-input type="input" v-model="logShowConf.filter_info" style="width: 420px"></el-input>
-                </el-space>
-              </div>
-            </el-col>
-            <el-col :span="5" class="text-right">系统服务配置：</el-col>
-            <el-col :span="19">
-              <el-space>
-                <el-checkbox v-model="logShowConf.reply_original_pkg">
-                  <span class="stdfs">转发原始位置报文</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.proc_ins_pkg">
-                  <span class="stdfs">处理INS报文</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
-                  <span class="stdfs">转发INS非位置报文</span>
-                </el-checkbox>
-              </el-space>
-              <el-space>
-                <el-checkbox v-model="logShowConf.sync_sys_time_by_cpt7">
-                  <span class="stdfs">同步CPT7时间</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.sync_sys_time_by_ins">
-                  <span class="stdfs">同步INS时间</span>
-                </el-checkbox>
-              </el-space>
-            </el-col>
-            <el-col :span="5" class="text-right">日志输出配置：</el-col>
-            <el-col :span="19">
-              <el-space>
-                <el-checkbox v-model="logShowConf.show_filter_pkg">
-                  <span class="stdfs">UDP包过滤</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.show_loc_info">
-                  <span class="stdfs">坐标数据</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.show_pkg_info">
-                  <span class="stdfs">UDP包摘要</span>
-                </el-checkbox>
-                <el-checkbox v-model="logShowConf.show_sec_info">
-                  <span class="stdfs">偏转任务</span>
-                </el-checkbox>
-              </el-space>
-            </el-col>
-          </el-row>
-          <el-row type="flex" align="middle">
-            <el-col :span="24" class="text-right">
-              <el-button @click="loadLogShowConf">刷新</el-button>
-              <el-button @click="saveLogShowConf">保存</el-button>
-            </el-col>
-          </el-row>
+              </el-col>
+            </el-row>
+            <el-row type="flex" align="middle">
+              <el-col :span="24" class="text-right">
+                <el-button @click="loadLogShowConf">刷新</el-button>
+                <el-button @click="saveLogShowConf">保存</el-button>
+              </el-col>
+            </el-row>
+          </div>
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -191,38 +193,40 @@
               <span>数据处理配置(保存后重启网关服务方可生效)</span>
             </div>
           </template>
-          <el-tabs type="card" v-model="activeTab">
-            <el-tab-pane label="CPT7数据处理配置" name="cpt7">
-              <!-- CPT7配置内容 -->
-              <el-row type="flex" align="middle">
-                <el-col :span="24">
-                  <el-input type="textarea" v-model="cpt7Conf" :rows="7"></el-input>
-                </el-col>
-              </el-row>
-              <el-row type="flex" align="middle">
-                <el-col :span="24" class="text-right">
-                  <el-button style="margin-right: 10px" @click="refreshCpt7Conf">刷新</el-button>
-                  <el-button style="margin-right: 10px" @click="getCpt7ConfDefault">加载默认配置</el-button>
-                  <el-button @click="saveCpt7Conf">保存</el-button>
-                </el-col>
-              </el-row>
-            </el-tab-pane>
-            <el-tab-pane label="INS数据处理配置" name="ins">
-              <!-- INS配置内容 -->
-              <el-row type="flex" align="middle">
-                <el-col :span="24">
-                  <el-input type="textarea" v-model="insConf" :rows="7"></el-input>
-                </el-col>
-              </el-row>
-              <el-row type="flex" align="middle">
-                <el-col :span="24" class="text-right">
-                  <el-button style="margin-right: 10px" @click="refreshInsConf">刷新</el-button>
-                  <el-button style="margin-right: 10px" @click="getInsConfDefault">加载默认配置</el-button>
-                  <el-button @click="saveInsConf">保存</el-button>
-                </el-col>
-              </el-row>
-            </el-tab-pane>
-          </el-tabs>
+          <div style="width: 100%; height: 270px; overflow: auto">
+            <el-tabs type="card" v-model="activeTab">
+              <el-tab-pane label="CPT7数据处理配置" name="cpt7">
+                <!-- CPT7配置内容 -->
+                <el-row type="flex" align="middle">
+                  <el-col :span="24">
+                    <el-input type="textarea" v-model="cpt7Conf" :rows="6"></el-input>
+                  </el-col>
+                </el-row>
+                <el-row type="flex" align="middle">
+                  <el-col :span="24" class="text-right">
+                    <el-button style="margin-right: 10px" @click="refreshCpt7Conf">刷新</el-button>
+                    <el-button style="margin-right: 10px" @click="getCpt7ConfDefault">加载默认配置</el-button>
+                    <el-button @click="saveCpt7Conf">保存</el-button>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+              <el-tab-pane label="INS数据处理配置" name="ins">
+                <!-- INS配置内容 -->
+                <el-row type="flex" align="middle">
+                  <el-col :span="24">
+                    <el-input type="textarea" v-model="insConf" :rows="6"></el-input>
+                  </el-col>
+                </el-row>
+                <el-row type="flex" align="middle">
+                  <el-col :span="24" class="text-right">
+                    <el-button style="margin-right: 10px" @click="refreshInsConf">刷新</el-button>
+                    <el-button style="margin-right: 10px" @click="getInsConfDefault">加载默认配置</el-button>
+                    <el-button @click="saveInsConf">保存</el-button>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
         </el-card>
       </el-col>
     </el-row>
