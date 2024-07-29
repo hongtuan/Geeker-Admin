@@ -345,50 +345,34 @@ const fillData = () => {
       let insStatDataRow: { [key: string]: any } = {};
       insStatDataRow["DATA_TYPE"] = "INS全量数据";
       insStatDataRow["STAT_ROWS"] = rowCount;
-      // insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
-      insStatDataRow["INS_EXPT_CT"] = 10 * Number(rowCount);
-      insStatDataRow["INS_RCV_CT"] = firstRow["UP_INS_CT"] - lastRow["UP_INS_CT"];
-      // 统计实际接收到的INS数据包数，在有数据进入的情况下，需要增加210，消除区间首位相减算法的影响
-      if (insStatDataRow["INS_RCV_CT"] > 0) {
-        // insStatDataRow["INS_RCV_CT"] += 210;
-        insStatDataRow["INS_RCV_CT"] += 10;
+      if (logData.reply_not_loc_pkg) {
+        insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
+      } else {
+        insStatDataRow["INS_EXPT_CT"] = 10 * Number(rowCount);
       }
+      insStatDataRow["INS_RCV_CT"] = firstRow["UP_INS_CT"] - lastRow["UP_INS_CT"];
+      // 统计实际接收到的INS数据包数，在有数据进入的情况下，需要增加210，消除区间首尾相减算法的影响
+      if (insStatDataRow["INS_RCV_CT"] > 0) {
+        if (logData.replay_not_loc_pkg) {
+          insStatDataRow["INS_RCV_CT"] += 210;
+        } else {
+          insStatDataRow["INS_RCV_CT"] += 10;
+        }
+      }
+      // 计算采集丢包率
       insStatDataRow["INS_LOST_RT"] = ((1 - insStatDataRow["INS_RCV_CT"] / insStatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
+
+      // 填充位置报文数据
       insStatDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);
       insStatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_INS_LOC_CT"] - lastRow["UP_INS_LOC_CT"];
-      // 统计实际接收到的INS坐标数据包数，在有数据进入的情况下，需要增加10，消除区间首位相减算法的影响
+      // 统计实际接收到的INS坐标数据包数，在有数据进入的情况下，需要增加10，消除区间首尾相减算法的影响
       if (insStatDataRow["INS_LOC_RCV_CT"] > 0) {
         insStatDataRow["INS_LOC_RCV_CT"] += 10;
       }
+      // 计算位置报文转发丢包率
       insStatDataRow["INS_LOC_LOST_RT"] =
         ((1 - insStatDataRow["INS_LOC_RCV_CT"] / insStatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
       statData2Table.value.push(insStatDataRow);
-
-      // 统计INS转发非坐标包
-      // let insNotLocDataRow: { [key: string]: any } = {};
-      // insNotLocDataRow["DATA_TYPE"] = "INS转发非坐标数据";
-      // insNotLocDataRow["STAT_ROWS"] = rowCount;
-      // insNotLocDataRow["INS_EXPT_CT"] = 200 * Number(rowCount);
-      // insNotLocDataRow["INS_RCV_CT"] = firstRow["UP_INS_RP_CT"] - lastRow["UP_INS_RP_CT"];
-      // insNotLocDataRow["INS_LOST_RT"] =
-      //   ((1 - insNotLocDataRow["INS_RCV_CT"] / insNotLocDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
-      // insNotLocDataRow["INS_LOC_EXPT_CT"] = 0;
-      // insNotLocDataRow["INS_LOC_RCV_CT"] = 0;
-      // insNotLocDataRow["INS_LOC_LOST_RT"] = "0.0%";
-      // statData2Table.value.push(insNotLocDataRow);
-
-      // 统计INS坐标数据包
-      // let insLocDataRow: { [key: string]: any } = {};
-      // insLocDataRow["DATA_TYPE"] = "INS坐标数据";
-      // insLocDataRow["STAT_ROWS"] = rowCount;
-      // insLocDataRow["INS_EXPT_CT"] = 10 * Number(rowCount);
-      // insLocDataRow["INS_RCV_CT"] = firstRow["UP_INS_LOC_CT"] - lastRow["UP_INS_LOC_CT"];
-      // insLocDataRow["INS_LOST_RT"] = ((1 - insLocDataRow["INS_RCV_CT"] / insLocDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
-      // insLocDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);
-      // insLocDataRow["INS_LOC_RCV_CT"] = firstRow["UP_INS_SD_CT"] - lastRow["UP_INS_SD_CT"];
-      // insLocDataRow["INS_LOC_LOST_RT"] =
-      //   ((1 - insLocDataRow["INS_LOC_RCV_CT"] / insLocDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
-      // statData2Table.value.push(insLocDataRow);
 
       // 统计CPT7全量数据包
       let cpt7StatDataRow: { [key: string]: any } = {};
@@ -411,32 +395,6 @@ const fillData = () => {
       cpt7StatDataRow["INS_LOC_LOST_RT"] =
         ((1 - cpt7StatDataRow["INS_LOC_RCV_CT"] / cpt7StatDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
       statData2Table.value.push(cpt7StatDataRow);
-
-      // 统计CPT7转发数据包
-      // let cpt7NotLocDataRow: { [key: string]: any } = {};
-      // cpt7NotLocDataRow["DATA_TYPE"] = "CPT7转发非坐标数据";
-      // cpt7NotLocDataRow["STAT_ROWS"] = rowCount;
-      // cpt7NotLocDataRow["INS_EXPT_CT"] = 0;
-      // cpt7NotLocDataRow["INS_RCV_CT"] = 0;
-      // cpt7NotLocDataRow["INS_LOST_RT"] = "0.0%";
-      // cpt7NotLocDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
-      // cpt7NotLocDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_RP_CT"] - lastRow["UP_CPT7_RP_CT"];
-      // cpt7NotLocDataRow["INS_LOC_LOST_RT"] =
-      //   ((1 - cpt7NotLocDataRow["INS_LOC_RCV_CT"] / cpt7NotLocDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
-      // statData2Table.value.push(cpt7NotLocDataRow);
-
-      // 统计CPT7坐标数据包
-      // let cpt7LocDataRow: { [key: string]: any } = {};
-      // cpt7LocDataRow["DATA_TYPE"] = "CPT7坐标数据";
-      // cpt7LocDataRow["STAT_ROWS"] = rowCount;
-      // cpt7LocDataRow["INS_EXPT_CT"] = 100 * Number(rowCount);
-      // cpt7LocDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_LOC_CT"] - lastRow["UP_CPT7_LOC_CT"];
-      // cpt7LocDataRow["INS_LOST_RT"] = ((1 - cpt7LocDataRow["INS_RCV_CT"] / cpt7LocDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
-      // cpt7LocDataRow["INS_LOC_EXPT_CT"] = 100 * Number(rowCount);
-      // cpt7LocDataRow["INS_LOC_RCV_CT"] = firstRow["UP_CPT7_SD_CT"] - lastRow["UP_CPT7_SD_CT"];
-      // cpt7LocDataRow["INS_LOC_LOST_RT"] =
-      //   ((1 - cpt7LocDataRow["INS_LOC_RCV_CT"] / cpt7LocDataRow["INS_LOC_EXPT_CT"]) * 100).toFixed(4) + "%";
-      // statData2Table.value.push(cpt7LocDataRow);
     }
   }
 };
