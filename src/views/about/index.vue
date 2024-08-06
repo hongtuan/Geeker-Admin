@@ -2,15 +2,16 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>网关设备简介</span>
+        <span>偏转网关设备功能简介</span>
       </div>
     </template>
     <el-row>
       <el-col>
-        <p class="text">实现W84坐标到C02坐标转换,将转换前后的数据发送到工控机。</p>
+        <p class="text">实现W84坐标到C02坐标转换,接收来自工控机转发程序的W84数据,将转换后的C02数据发回到工控机。</p>
         <div>
           <img class="home-bg" src="@/assets/images/srvConfig.png" alt="srvConfig" />
         </div>
+        <p class="text">工控机设备接收来自CPT7和INS的原始数据,落盘存储后，转发数据到偏转网关,实际部署IP地址依据具体车辆情况。</p>
       </el-col>
     </el-row>
   </el-card>
