@@ -40,7 +40,8 @@
           </el-form-item>
         </el-form>
         <div class="button-container">
-          <el-button @click="submitForm">提交</el-button>
+          <el-button @click="resetForm">重置</el-button>
+          <el-button @click="submitForm">保存</el-button>
         </div>
       </el-col>
     </el-row>
@@ -48,7 +49,7 @@
 </template>
 
 <script setup lang="ts" name="seReg">
-import { getSeSnSrv, seRegSrv } from "@/api/modules/seappmgr";
+import { getSeSnSrv, seRegSrv, seLoadConfSrv } from "@/api/modules/seappmgr";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
 import { FormInstance } from "element-plus"; // 假设使用 Element Plus
@@ -102,6 +103,14 @@ const submitForm = async () => {
   }
 };
 
+const resetForm = async () => {
+  // load form init data from backend
+  // seLoadConfSrv
+  const { data } = await seLoadConfSrv();
+  console.log(data);
+  // 用data内容填充formData
+  formData.value = data;
+};
 const querySeSn = async () => {
   // todo...
   const { data } = await getSeSnSrv();

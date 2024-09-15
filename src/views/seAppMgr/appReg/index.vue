@@ -16,6 +16,7 @@
         </el-row>
         <el-row type="flex" justify="center" align="middle">
           <el-col :span="24" class="button-container">
+            <el-button @click="resetForm">重置</el-button>
             <el-button @click="onSubmit">保存</el-button>
           </el-col>
         </el-row>
@@ -27,7 +28,7 @@
 <script setup lang="ts">
 import { ElMessage, ElForm } from "element-plus";
 import { ref } from "vue";
-import { appRegSrv } from "@/api/modules/seappmgr";
+import { appRegSrv, appLoadConfSrv } from "@/api/modules/seappmgr";
 
 const formRef = ref<typeof ElForm | null>(null);
 const form = ref({
@@ -55,6 +56,15 @@ const onSubmit = async () => {
       return false;
     }
   });
+};
+
+const resetForm = async () => {
+  // load form init data from backend
+  const { data } = await appLoadConfSrv();
+  console.log(data);
+  // 将data转换为JSON字符串，赋值给form.value
+  // form.value = JSON.parse(data);
+  form.value["asdInfo"] = JSON.stringify(data.asdInfo, null, 2);
 };
 </script>
 

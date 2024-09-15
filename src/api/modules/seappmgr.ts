@@ -10,12 +10,18 @@ export const getSeSnSrv = () => {
 export const seRegSrv = (params: any) => {
   return http.post<any>(PORT1 + `/sereg`, params);
 };
-
+// 1.1.1
+export const seLoadConfSrv = () => {
+  return http.get<any>(PORT1 + `/seloadconf`);
+};
 // 1.2
 export const appRegSrv = (params: any) => {
   return http.post<any>(PORT1 + `/appreg`, params);
 };
-
+// 1.2.1
+export const appLoadConfSrv = () => {
+  return http.get<any>(PORT1 + `/apploadconf`);
+};
 // 1.3
 export const seTestSrv = (params: any) => {
   return http.post<any>(PORT1 + `/setest`, params);

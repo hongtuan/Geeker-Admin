@@ -40,10 +40,10 @@ import { ref, reactive } from "vue";
 
 const formRef = ref<typeof ElForm | null>(null);
 const formData = reactive({
-  lng: "125.15588895",
-  lat: "44.33206306",
-  heit: "200.6",
-  gpsWeek: "2306"
+  lng: "105.468449",
+  lat: "28.329729",
+  heit: "400.6",
+  gpsWeek: "2331"
 });
 
 const testResult = ref("");
