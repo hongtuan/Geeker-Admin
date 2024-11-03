@@ -303,6 +303,7 @@ const fillData = () => {
     tableColumnNames.splice(10, 0, "CPT7_LOST_PKG");
     tableColumnNames.splice(13, 0, "CPT7_LOST_LOC_PKG");
     console.log("logData.reply_not_loc_pkg=", logData.reply_not_loc_pkg);
+    console.log("logData.proc_ins_pkg2=", logData.proc_ins_pkg2);
     // 将数据转换为适合表格展示的数据
     logData2Table.value = [];
     let rowCount = logData["LOG_TIME"].length;
@@ -348,26 +349,29 @@ const fillData = () => {
       if (logData.reply_not_loc_pkg) {
         insStatDataRow["INS_EXPT_CT"] = 210 * Number(rowCount);
       } else {
-        insStatDataRow["INS_EXPT_CT"] = 10 * Number(rowCount);
+        insStatDataRow["INS_EXPT_CT"] = (logData.proc_ins_pkg2 ? 110 : 10) * Number(rowCount);
       }
       insStatDataRow["INS_RCV_CT"] = firstRow["UP_INS_CT"] - lastRow["UP_INS_CT"];
+      if (insStatDataRow["INS_RCV_CT"] < 0) {
+        insStatDataRow["INS_RCV_CT"] = 0;
+      }
       // 统计实际接收到的INS数据包数，在有数据进入的情况下，需要增加210，消除区间首尾相减算法的影响
       if (insStatDataRow["INS_RCV_CT"] > 0) {
         if (logData.replay_not_loc_pkg) {
           insStatDataRow["INS_RCV_CT"] += 210;
         } else {
-          insStatDataRow["INS_RCV_CT"] += 10;
+          insStatDataRow["INS_RCV_CT"] += logData.proc_ins_pkg2 ? 110 : 10;
         }
       }
       // 计算采集丢包率
       insStatDataRow["INS_LOST_RT"] = ((1 - insStatDataRow["INS_RCV_CT"] / insStatDataRow["INS_EXPT_CT"]) * 100).toFixed(4) + "%";
 
       // 填充位置报文数据
-      insStatDataRow["INS_LOC_EXPT_CT"] = 10 * Number(rowCount);
+      insStatDataRow["INS_LOC_EXPT_CT"] = (logData.proc_ins_pkg2 ? 110 : 10) * Number(rowCount);
       insStatDataRow["INS_LOC_RCV_CT"] = firstRow["UP_INS_LOC_CT"] - lastRow["UP_INS_LOC_CT"];
       // 统计实际接收到的INS坐标数据包数，在有数据进入的情况下，需要增加10，消除区间首尾相减算法的影响
       if (insStatDataRow["INS_LOC_RCV_CT"] > 0) {
-        insStatDataRow["INS_LOC_RCV_CT"] += 10;
+        insStatDataRow["INS_LOC_RCV_CT"] += logData.proc_ins_pkg2 ? 110 : 10;
       }
       // 计算位置报文转发丢包率
       insStatDataRow["INS_LOC_LOST_RT"] =
@@ -380,6 +384,9 @@ const fillData = () => {
       cpt7StatDataRow["STAT_ROWS"] = rowCount;
       cpt7StatDataRow["INS_EXPT_CT"] = 100 * Number(rowCount);
       cpt7StatDataRow["INS_RCV_CT"] = firstRow["UP_CPT7_CT"] - lastRow["UP_CPT7_CT"];
+      if (cpt7StatDataRow["INS_RCV_CT"] < 0) {
+        cpt7StatDataRow["INS_RCV_CT"] = 0;
+      }
       // 统计实际接收到的CPT7数据包数，在有数据进入的情况下，需要增加100，消除区间首位相减算法的影响
       if (cpt7StatDataRow["INS_RCV_CT"] > 0) {
         cpt7StatDataRow["INS_RCV_CT"] += 100;

@@ -17,7 +17,14 @@
     </template>
     <el-row>
       <el-col>
-        <el-input type="textarea" ref="logInput" :value="logData" :rows="30" :readonly="true"></el-input>
+        <el-input
+          type="textarea"
+          ref="logInput"
+          v-model="logData"
+          :rows="30"
+          :readonly="isReadonly"
+          @keydown="handleKeydown"
+        ></el-input>
       </el-col>
     </el-row>
   </el-card>
@@ -31,9 +38,10 @@ import { saveAs } from "file-saver";
 import dayjs from "dayjs";
 import { getLogContent, clearLogFile, downloadLogGz, restartGwSrv, stopGwSrv } from "@/api/modules/sysadmin";
 import { confirmAction } from "@/api/modules/utilfuns";
-const logData = ref({});
+const logData = ref("");
 const logRowCount = ref(500);
 const logInput: Ref<InstanceType<typeof ElInput> | null> = ref(null);
+const isReadonly = ref(true);
 const loadData = async () => {
   // 请求后端服务加载数据
   const { data } = await getLogContent();
@@ -97,6 +105,17 @@ const goToEnd = async () => {
     }
   }
 };
+
+const handleKeydown = (event: KeyboardEvent | Event) => {
+  if (!(event instanceof KeyboardEvent)) return true;
+  if (event.shiftKey && event.altKey && event.key === "E") {
+    isReadonly.value = false;
+  } else if (event.shiftKey && event.altKey && event.key === "R") {
+    isReadonly.value = true;
+  }
+  return true;
+};
+
 // 页面加载完毕后调用这个方法
 onMounted(() => loadData());
 </script>

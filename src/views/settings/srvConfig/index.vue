@@ -35,7 +35,7 @@
                 <el-button @click="saveEthMac">保存</el-button>
               </el-col>
             </el-row>
-            <el-row type="flex" align="middle" style="margin-bottom: 10px">
+            <!-- <el-row type="flex" align="middle" style="margin-bottom: 10px">
               <el-col :span="5" class="text-right"><span>天津工场测试模式：</span></el-col>
               <el-col :span="14">
                 <el-checkbox v-model="tjTestMode">
@@ -46,7 +46,7 @@
                 <el-button @click="loadTJTestMode">刷新</el-button>
                 <el-button @click="saveTJTestMode">保存</el-button>
               </el-col>
-            </el-row>
+            </el-row> -->
           </div>
         </el-card>
       </el-col>
@@ -140,11 +140,14 @@
               <el-col :span="5" class="text-right">系统服务配置：</el-col>
               <el-col :span="19">
                 <el-space>
-                  <el-checkbox v-model="logShowConf.reply_original_pkg">
-                    <span class="stdfs">转发原始位置报文</span>
+                  <el-checkbox v-model="logShowConf.reply_original_pkg" disabled>
+                    <span class="stdfs">转发原始报文</span>
                   </el-checkbox>
                   <el-checkbox v-model="logShowConf.proc_ins_pkg">
                     <span class="stdfs">处理INS报文</span>
+                  </el-checkbox>
+                  <el-checkbox v-model="logShowConf.proc_ins_pkg2">
+                    <span class="stdfs">处理INS报文2</span>
                   </el-checkbox>
                   <el-checkbox v-model="logShowConf.reply_not_loc_pkg">
                     <span class="stdfs">转发INS非位置报文</span>
@@ -278,8 +281,8 @@ import {
   getCPT7Conf,
   setCPT7Conf,
   loadCPT7ConfDefault,
-  getTJTestMode,
-  setTJTestMode,
+  // getTJTestMode,
+  // setTJTestMode,
   restartGwSrv,
   getLogShowConf,
   updateLogShowConf
@@ -292,7 +295,7 @@ const ethMac = ref();
 const ethConf = ref();
 const insConf = ref();
 const cpt7Conf = ref();
-const tjTestMode = ref(false);
+// const tjTestMode = ref(false);
 const logShowConf = ref({
   show_filter_pkg: false,
   show_pkg_info: false,
@@ -303,6 +306,7 @@ const logShowConf = ref({
   sync_sys_time_by_cpt7: true,
   sync_sys_time_by_ins: false,
   proc_ins_pkg: false,
+  proc_ins_pkg2: false,
   promisc_mode: false,
   ins_cap_port: 30018,
   cpt7_cap_port: 7003,
@@ -442,24 +446,24 @@ const restartGw = async () => {
   confirmAction("你确认要重启网关服务吗？", restartGwSrv, "网关服务已重启。");
 };
 
-const loadTJTestMode = async () => {
-  // 请求后端服务加载数据
-  const { data } = await getTJTestMode();
-  // console.log(JSON.stringify(data, null, 2));
-  tjTestMode.value = data.tjTestMode;
-  // console.log(data);
-};
+// const loadTJTestMode = async () => {
+//   // 请求后端服务加载数据
+//   const { data } = await getTJTestMode();
+//   // console.log(JSON.stringify(data, null, 2));
+//   tjTestMode.value = data.tjTestMode;
+//   // console.log(data);
+// };
 
-const saveTJTestMode = async () => {
-  // 请求后端服务加载数据
-  let param = { tjTestMode: tjTestMode.value };
-  const { data } = await setTJTestMode(param);
-  console.log(data);
-  ElMessage({
-    message: "配置更新成功！",
-    type: "info"
-  });
-};
+// const saveTJTestMode = async () => {
+//   // 请求后端服务加载数据
+//   let param = { tjTestMode: tjTestMode.value };
+//   const { data } = await setTJTestMode(param);
+//   console.log(data);
+//   ElMessage({
+//     message: "配置更新成功！",
+//     type: "info"
+//   });
+// };
 
 const loadLogShowConf = async () => {
   // 请求后端服务加载数据
@@ -488,7 +492,7 @@ const loadData = async () => {
   refreshEthConf();
   refreshInsConf();
   refreshCpt7Conf();
-  loadTJTestMode();
+  // loadTJTestMode();
   loadLogShowConf();
 };
 // 页面加载完毕后调用这个方法
