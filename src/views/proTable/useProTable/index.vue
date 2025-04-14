@@ -128,7 +128,7 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
     search: { el: "input", tooltip: "我是搜索提示" },
     render: scope => {
       return (
-        <el-button type="primary" link onClick={() => ElMessage.success("我是通过 tsx 语法渲染的内容")}>
+        <el-button type="primary" onClick={() => nameClickCallback(scope.row)}>
           {scope.row.username}
         </el-button>
       );
@@ -267,5 +267,10 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
+};
+
+const nameClickCallback = (params: any) => {
+  // console.log(params);
+  ElMessage.success("look" + params.username);
 };
 </script>
