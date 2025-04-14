@@ -9,17 +9,21 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import eslintPlugin from "vite-plugin-eslint";
 import viteCompression from "vite-plugin-compression";
 import vueSetupExtend from "unplugin-vue-setup-extend-plus/vite";
+import NextDevTools from "vite-plugin-vue-devtools";
+import { codeInspectorPlugin } from "code-inspector-plugin";
 
 /**
  * 创建 vite 插件
  * @param viteEnv
  */
 export const createVitePlugins = (viteEnv: ViteEnv): (PluginOption | PluginOption[])[] => {
-  const { VITE_GLOB_APP_TITLE, VITE_REPORT, VITE_PWA } = viteEnv;
+  const { VITE_GLOB_APP_TITLE, VITE_REPORT, VITE_DEVTOOLS, VITE_PWA, VITE_CODEINSPECTOR } = viteEnv;
   return [
     vue(),
     // vue 可以使用 jsx/tsx 语法
     vueJsx(),
+    // devTools
+    VITE_DEVTOOLS && NextDevTools({ launchEditor: "code" }),
     // esLint 报错信息显示在浏览器界面上
     eslintPlugin(),
     // name 可以写在 script 标签上
@@ -41,7 +45,12 @@ export const createVitePlugins = (viteEnv: ViteEnv): (PluginOption | PluginOptio
     // vitePWA
     VITE_PWA && createVitePwa(viteEnv),
     // 是否生成包预览，分析依赖包大小做优化处理
-    VITE_REPORT && (visualizer({ filename: "stats.html", gzipSize: true, brotliSize: true }) as PluginOption)
+    VITE_REPORT && (visualizer({ filename: "stats.html", gzipSize: true, brotliSize: true }) as PluginOption),
+    // 自动 IDE 并将光标定位到 DOM 对应的源代码位置。see: https://inspector.fe-dev.cn/guide/start.html
+    VITE_CODEINSPECTOR &&
+      codeInspectorPlugin({
+        bundler: "vite"
+      })
   ];
 };
 
