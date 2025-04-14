@@ -5,13 +5,11 @@ import { ElMessage } from "element-plus";
 import { ResultData } from "@/api/interface";
 import { ResultEnum } from "@/enums/httpEnum";
 import { checkStatus } from "./helper/checkStatus";
-import { AxiosCanceler } from "./helper/axiosCancel";
 import { useUserStore } from "@/stores/modules/user";
 import router from "@/routers";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   loading?: boolean;
-  cancel?: boolean;
 }
 
 const config = {
@@ -22,8 +20,6 @@ const config = {
   // 跨域时候允许携带凭证
   withCredentials: true
 };
-
-const axiosCanceler = new AxiosCanceler();
 
 class RequestHttp {
   service: AxiosInstance;
@@ -39,14 +35,17 @@ class RequestHttp {
     this.service.interceptors.request.use(
       (config: CustomAxiosRequestConfig) => {
         const userStore = useUserStore();
-        // 重复请求不需要取消，在 api 服务中通过指定的第三个参数: { cancel: false } 来控制
-        config.cancel ??= true;
-        config.cancel && axiosCanceler.addPending(config);
         // 当前请求不需要显示 loading，在 api 服务中通过指定的第三个参数: { loading: false } 来控制
-        config.loading ??= true;
+        config.loading ?? (config.loading = true);
         config.loading && showFullScreenLoading();
-        if (config.headers && typeof config.headers.set === "function") {
-          config.headers.set("x-access-token", userStore.token);
+        // if (config.headers && typeof config.headers.set === "function") {
+        //   config.headers.set("x-access-token", userStore.token);
+        // }
+        const token = userStore.token;
+        // if (config.headers && typeof config.headers?.set === "function") config.headers.set("x-access-token", token);
+        // 设置 Authorization 请求头
+        if (token && config.headers) {
+          config.headers["Authorization"] = `Bearer ${token}`;
         }
         return config;
       },
@@ -60,13 +59,16 @@ class RequestHttp {
      *  服务器换返回信息 -> [拦截统一处理] -> 客户端JS获取到信息
      */
     this.service.interceptors.response.use(
-      (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
-        const { data, config } = response;
-
+      (response: AxiosResponse) => {
+        tryHideFullScreenLoading();
+        const { config } = response;
+        // 如果是文件下载请求（responseType 为 blob），直接返回完整的响应对象
+        if (config.responseType === "blob") {
+          return response; // 返回完整的响应对象，包含 headers
+        }
+        const { data } = response;
         const userStore = useUserStore();
-        axiosCanceler.removePending(config);
-        config.loading && tryHideFullScreenLoading();
-        // 登录失效
+        // 登陆失效
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken("");
           router.replace(LOGIN_URL);
@@ -111,7 +113,11 @@ class RequestHttp {
   delete<T>(url: string, params?: any, _object = {}): Promise<ResultData<T>> {
     return this.service.delete(url, { params, ..._object });
   }
-  download(url: string, params?: object, _object = {}): Promise<BlobPart> {
+  // download(url: string, params?: object, _object = {}): Promise<BlobPart> {
+  //   return this.service.post(url, params, { ..._object, responseType: "blob" });
+  // }
+  // 这里为支持下载文件名提取，返回 Blob 类型的响应，并使用了 AxiosResponse<Blob>作为返回类型，之前是：Promise<BlobPart>。
+  download(url: string, params?: object, _object = {}): Promise<AxiosResponse<Blob>> {
     return this.service.post(url, params, { ..._object, responseType: "blob" });
   }
 }

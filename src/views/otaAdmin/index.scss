@@ -1,0 +1,54 @@
+.home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  .home-bg {
+    width: 70%;
+    max-width: 1200px;
+    margin-bottom: 20px;
+  }
+}
+.el-row {
+  margin-bottom: 20px;
+}
+.el-row:last-child {
+  margin-bottom: 0;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.text {
+  font-size: 14px;
+}
+.item {
+  margin-bottom: 18px;
+}
+.box-card {
+  width: 100%;
+  height: 100%;
+}
+.el-textarea__inner {
+  white-space: pre-wrap;
+}
+.upload {
+  width: 80%;
+}
+.form-title {
+  margin-bottom: 20px; /* 添加下间距，避免和表单内容重叠 */
+  font-size: 14px; /* 调整字体大小 */
+  text-align: center; /* 居中 */
+}
+.vip-text {
+  font-size: 18px; /* 调整字体大小 */
+  font-weight: bold; /* 调整字体粗细 */
+  color: red;
+}
+.vip-text-blue {
+  font-size: 16px; /* 调整字体大小 */
+  font-weight: bold; /* 调整字体粗细 */
+  color: rgb(47 0 255);
+}
