@@ -5,6 +5,7 @@ import { createProxy } from "./build/proxy";
 import { createVitePlugins } from "./build/plugins";
 import pkg from "./package.json";
 import dayjs from "dayjs";
+import sass from "sass";
 
 const { dependencies, devDependencies, name, version } = pkg;
 const __APP_INFO__ = {
@@ -33,7 +34,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@import "@/styles/var.scss";`
+          additionalData: `@use "@/styles/var.scss";`,
+          implementation: sass
         }
       }
     },

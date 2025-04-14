@@ -10,7 +10,7 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="用户头像" prop="avatar">
-        <UploadImg v-model:image-url="drawerProps.row!.avatar" width="135px" height="135px" :file-size="3">
+        <UploadImg v-model:image-url="avatarComputed" width="135px" height="135px" :file-size="3">
           <template #empty>
             <el-icon><Avatar /></el-icon>
             <span>请上传头像</span>
@@ -19,7 +19,7 @@
         </UploadImg>
       </el-form-item>
       <el-form-item label="用户照片" prop="photo">
-        <UploadImgs v-model:file-list="drawerProps.row!.photo" height="140px" width="140px" border-radius="50%">
+        <UploadImgs v-model:file-list="photoComputed" height="140px" width="140px" border-radius="50%">
           <template #empty>
             <el-icon><Picture /></el-icon>
             <span>请上传照片</span>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { genderType } from "@/utils/dict";
 import { ElMessage, FormInstance } from "element-plus";
 import { User } from "@/api/interface";
@@ -106,6 +106,19 @@ const handleSubmit = () => {
     }
   });
 };
+const avatarComputed = computed({
+  get: () => drawerProps.value.row.avatar || "",
+  set: val => {
+    drawerProps.value.row.avatar = val;
+  }
+});
+
+const photoComputed = computed({
+  get: () => drawerProps.value.row.photo || [],
+  set: val => {
+    drawerProps.value.row.photo = val;
+  }
+});
 
 defineExpose({
   acceptParams
